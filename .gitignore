@@ -1,0 +1,16 @@
+# Python関連
+*.pyc
+__pycache__/
+# 環境設定ファイル
+venv/
+*.env
+# データベース
+db.sqlite3
+# その他
+*.log
+
+
+
+
+
+
