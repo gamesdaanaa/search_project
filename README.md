@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 # タスク管理AI Startup Project
 
@@ -17,7 +16,3 @@
 
 ## 必要なパッケージ
 requirements.txtに記載されています
-=======
-# search_project
-search_project
->>>>>>> b70edb1ed51f1556a890650adf9b36a6806865db
