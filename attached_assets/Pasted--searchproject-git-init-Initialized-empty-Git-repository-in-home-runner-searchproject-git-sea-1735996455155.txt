@@ -1,0 +1,60 @@
+~/searchproject$ git init
+Initialized empty Git repository in /home/runner/searchproject/.git/
+~/searchproject$ git add .
+~/searchproject$ git config --global init.defaultBranch main
+~/searchproject$ git commit -m "Initial commit"
+[main (root-commit) b07410a] Initial commit
+ 53 files changed, 5466 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 .replit
+ create mode 100644 Pasted-IntegrityError-at-register-duplicate-key-value-violates-unique-constraint-gametube-userprofile-us-1735214162623.txt
+ create mode 100644 Pasted-ProgrammingError-at-column-gametube-userprofile-age-does-not-exist-LINE-1-rprofile-avatar--1735212703975.txt
+ create mode 100644 Pasted-ProgrammingError-at-column-gametube-video-age-restriction-does-not-exist-LINE-1-tube-video-v-1735213205748.txt
+ create mode 100644 Pasted-nix-error-building-nix-env-exit-status-1-Output-has-been-trimmed-to-the-last-20-lines-wh-1734851063684.txt
+ create mode 100644 README.md
+ create mode 100644 check_tables.py
+ create mode 100644 check_users.py
+ create mode 100644 gametube/admin.py
+ create mode 100644 gametube/migrations/0001_initial.py
+ create mode 100644 gametube/migrations/0002_add_age_field.py
+ create mode 100644 gametube/migrations/0002_auto_20241226_1135.py
+ create mode 100644 gametube/migrations/0003_merge_0002_add_age_field_0002_auto_20241226_1135.py
+ create mode 100644 gametube/migrations/0004_add_age_restriction.py
+ create mode 100644 gametube/migrations/0004_auto_20241226_1139.py
+ create mode 100644 gametube/migrations/0005_merge_20241226_1142.py
+ create mode 100644 gametube/migrations/__init__.py
+ create mode 100644 gametube/models.py
+ create mode 100644 gametube/templates/gametube/base.html
+ create mode 100644 gametube/templates/gametube/device_purchases.html
+ create mode 100644 gametube/templates/gametube/game_board.html
+ create mode 100644 gametube/templates/gametube/game_boards.html
+ create mode 100644 gametube/templates/gametube/game_downloads.html
+ create mode 100644 gametube/templates/gametube/home.html
+ create mode 100644 gametube/templates/gametube/liked_videos.html
+ create mode 100644 gametube/templates/gametube/login.html
+ create mode 100644 gametube/templates/gametube/register.html
+ create mode 100644 gametube/templates/gametube/subscriptions.html
+ create mode 100644 gametube/templates/gametube/upload.html
+ create mode 100644 gametube/templates/gametube/user_profile.html
+ create mode 100644 gametube/templates/gametube/video_detail.html
+ create mode 100644 gametube/templates/gametube/watch_history.html
+ create mode 100644 gametube/urls.py
+ create mode 100644 gametube/views.py
+ create mode 100644 generated-icon.png
+ create mode 100644 main.py
+ create mode 100755 manage.py
+ create mode 100644 myproject/__init__.py
+ create mode 100644 myproject/asgi.py
+ create mode 100644 myproject/settings.py
+ create mode 100644 myproject/urls.py
+ create mode 100644 myproject/wsgi.py
+ create mode 100644 os
+ create mode 100644 pyproject.toml
+ create mode 100644 replit.nix
+ create mode 100644 requirements.txt
+ create mode 100644 static/style.css
+ create mode 100644 uv.lock
+ create mode 100644 "\343\202\271\343\202\257\343\203\252\343\203\274\343\203\263\343\202\267\343\203\247\343\203\203\343\203\210 2024-12-20 17.10.15.png"
+ create mode 100644 "\343\202\271\343\202\257\343\203\252\343\203\274\343\203\263\343\202\267\343\203\247\343\203\203\343\203\210 2024-12-20 17.15.04.png"
+ create mode 100644 "\343\202\271\343\202\257\343\203\252\343\203\274\343\203\263\343\202\267\343\203\247\343\203\203\343\203\210 2024-12-20 17.19.57.png"
+ create mode 100644 "\343\202\271\343\202\257\343\203\252\343\203\274\343\203\263\343\202\267\343\203\247\343\203\203\343\203\210 2024-12-21 17.26.47.png"

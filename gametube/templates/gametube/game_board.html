@@ -1,0 +1,72 @@
+
+{% extends 'gametube/base.html' %}
+
+{% block content %}
+<div class="board-container">
+    <h1>{{ board.game }}の掲示板</h1>
+    
+    <div class="chat-messages">
+        {% for message in messages %}
+        <div class="message">
+            <strong>{{ message.user.username }}</strong>
+            <span class="timestamp">{{ message.created_at|date:"Y/m/d H:i" }}</span>
+            <p>{{ message.message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if user.is_authenticated %}
+    <form method="post" class="message-form">
+        {% csrf_token %}
+        <textarea name="message" placeholder="メッセージを入力..." required></textarea>
+        <button type="submit">送信</button>
+    </form>
+    {% endif %}
+</div>
+
+<style>
+.board-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.chat-messages {
+    margin: 20px 0;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.message {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.timestamp {
+    color: #666;
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+
+.message-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.message-form button {
+    background: #ff0000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+</style>
+{% endblock %}

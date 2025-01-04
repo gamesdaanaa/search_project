@@ -1,0 +1,119 @@
+
+{% extends 'gametube/base.html' %}
+
+{% block content %}
+<div class="boards-container">
+    <h1>ゲーム掲示板一覧</h1>
+    
+    {% if user.is_authenticated %}
+    <form method="post" class="board-form">
+        {% csrf_token %}
+        <input type="text" name="game" placeholder="ゲーム名を入力..." required>
+        <button type="submit">掲示板を作成</button>
+    </form>
+    {% endif %}
+    
+    <div class="boards-list">
+        {% for board in boards %}
+        <div class="board-item">
+            <div class="board-content">
+                <a href="{% url 'gametube:board_detail' board.id %}">
+                    <h2>{{ board.game }}</h2>
+                    <p>作成日: {{ board.created_at|date:"Y/m/d" }}</p>
+                </a>
+                {% if can_delete %}
+                <form method="post" class="delete-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete" value="{{ board.id }}">
+                    <button type="submit" class="delete-btn">削除</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p>まだ掲示板がありません。</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.boards-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.board-form {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+}
+
+.board-form input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.board-form button {
+    background: #ff0000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.boards-list {
+    margin-top: 20px;
+}
+
+.board-item {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.board-item a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.board-item h2 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.board-item p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.board-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #cc0000;
+}
+
+.delete-form {
+    margin: 0;
+}
+</style>
+{% endblock %}

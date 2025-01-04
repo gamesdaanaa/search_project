@@ -1,0 +1,286 @@
+{% extends 'gametube/base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-header-content">
+            <div class="profile-avatar">
+                {% if profile_user.userprofile.avatar %}
+                    <img src="{{ profile_user.userprofile.avatar.url }}" alt="プロフィール画像">
+                {% else %}
+                    <div class="default-avatar">{{ profile_user.username|make_list|first|upper }}</div>
+                {% endif %}
+            </div>
+            <h1>{{ profile_user.username }}</h1>
+            <div class="profile-bio">
+                {% if user == profile_user %}
+                    <div class="age-input-form">
+                        <h3>年齢を入力してください</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="number" name="age" min="1" max="120" value="{{ profile_user.userprofile.age|default:'' }}" required>
+                            <button type="submit">保存</button>
+                        </form>
+                    </div>
+                {% endif %}
+                <div class="bio-content">
+                    <h3>概要</h3>
+                    {% if profile_user.userprofile.bio %}
+                        <p>{{ profile_user.userprofile.bio }}</p>
+                    {% endif %}
+                    <!-- Channel Details Modal -->
+                    <div id="channelModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeChannelModal()">&times;</span>
+                            <h2>チャンネル詳細</h2>
+                            <div class="channel-info">
+                                <p>総動画数: {{ videos|length }}本</p>
+                                <p>総視聴回数: {{ profile_user.video_set.all|length }}回</p>
+                                <p>登録日: {{ profile_user.date_joined|date:"Y/m/d" }}</p>
+                                {% if profile_user.userprofile.bio %}
+                                    <p>自己紹介: {{ profile_user.userprofile.bio }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function openChannelModal() {
+                            document.getElementById('channelModal').style.display = 'block';
+                        }
+                        
+                        function closeChannelModal() {
+                            document.getElementById('channelModal').style.display = 'none';
+                        }
+
+                        window.onclick = function(event) {
+                            if (event.target == document.getElementById('channelModal')) {
+                                closeChannelModal();
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <span>チャンネル登録者数: <span id="subscribersCount">{{ subscribers_count }}</span></span>
+            <button class="profile-btn" onclick="openChannelModal()">チャンネル詳細</button>
+            {% if user.is_authenticated and user != profile_user %}
+                <button onclick="handleSubscribe('{{ profile_user.username }}')" class="subscribe-button {% if is_subscribed %}subscribed{% endif %}" id="subscribeButton">
+                    {% if is_subscribed %}登録済み{% else %}チャンネル登録{% endif %}
+                </button>
+            {% endif %}
+        </div>
+        <script>
+        function handleSubscribe(username) {
+            fetch(`/subscribe/${username}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const button = document.getElementById('subscribeButton');
+                const count = document.getElementById('subscribersCount');
+                
+                if (data.subscribed) {
+                    button.textContent = '登録済み';
+                    button.classList.add('subscribed');
+                } else {
+                    button.textContent = 'チャンネル登録';
+                    button.classList.remove('subscribed');
+                }
+                
+                button.classList.add('animate');
+                setTimeout(() => {
+                    button.classList.remove('animate');
+                }, 300);
+                
+                count.textContent = data.subscribers_count;
+            });
+        }
+        </script>
+    </div>
+    <div class="user-videos">
+        <h2>投稿動画</h2>
+        <div class="videos">
+            {% for video in videos %}
+                <div class="video-card">
+                    <a href="{% url 'gametube:video_detail' video.id %}">
+                        <div class="video-thumbnail">
+                            <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                        </div>
+                        <div class="video-info">
+                            <h3>{{ video.title }}</h3>
+                        </div>
+                    </a>
+                </div>
+            {% empty %}
+                <p>まだ動画を投稿していません。</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.profile-header {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    margin: 15px 0;
+}
+
+.profile-actions span {
+    background: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.subscribe-button {
+    background: #ff0000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    text-align: center;
+}
+
+.subscribe-button.subscribed {
+    background: #606060;
+}
+
+.subscribe-button:hover {
+    background: #cc0000;
+}
+
+.subscribe-button.subscribed:hover {
+    background: #404040;
+}
+
+.subscribe-button.animate {
+    animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.profile-avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.default-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+}
+
+.profile-btn {
+    background: #f0f0f0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.profile-btn:hover {
+    background: #e0e0e0;
+}
+
+.videos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.video-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.video-info {
+    padding: 10px;
+}
+
+.video-info h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    cursor: pointer;
+}
+</style>
+{% endblock %}

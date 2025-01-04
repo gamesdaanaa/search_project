@@ -1,0 +1,54 @@
+nix error: building nix env: exit status 1
+Output has been trimmed to the last 20 lines
+
+       … while evaluating attribute 'REPLIT_LD_LIBRARY_PATH' of derivation 'nix-shell'
+
+         at «string»:309:9:
+
+          308|       {
+          309|         REPLIT_LD_LIBRARY_PATH = (pkgs.lib.optionalString (env ? REPLIT_LD_LIBRARY_PATH) (env.REPLIT_LD_LIBRARY_PATH + ":")) +
+             |         ^
+          310|         pkgs.lib.makeLibraryPath deps;
+
+       error: attribute 'libpq' missing
+
+       at /home/runner/ClientsideWrongMouse/replit.nix:9:5:
+
+            8|     pkgs.postgresql
+            9|     pkgs.libpq
+             |     ^
+           10|     pkgs.python39Packages.psycopg2
+       Did you mean one of lib, libGL, libHX, libao or libav?
+
+Connected to PostgreSQL database. Version: PostgreSQL 16.6 on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+Database connection closed.
+Connected to PostgreSQL database. Version: PostgreSQL 16.6 on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+Database connection closed.
+Watching for file changes with StatReloader
+Performing system checks...
+
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    self.run()
+  File "/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/threading.py", line 982, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/runner/ClientsideWrongMouse/.pythonlibs/lib/python3.11/site-packages/django/utils/autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+  File "/home/runner/ClientsideWrongMouse/.pythonlibs/lib/python3.11/site-packages/django/core/management/commands/runserver.py", line 134, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/runner/ClientsideWrongMouse/.pythonlibs/lib/python3.11/site-packages/django/core/management/base.py", line 563, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gametube.DevicePurchase.thumbnail: (fields.E210) Cannot use ImageField because Pillow is not installed.
+    HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
+gametube.GameDownload.thumbnail: (fields.E210) Cannot use ImageField because Pillow is not installed.
+    HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
+gametube.UserProfile.avatar: (fields.E210) Cannot use ImageField because Pillow is not installed.
+    HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
+gametube.Video.thumbnail: (fields.E210) Cannot use ImageField because Pillow is not installed.
+    HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
+
+System check identified 4 issues (0 silenced).

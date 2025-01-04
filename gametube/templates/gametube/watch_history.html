@@ -1,0 +1,95 @@
+
+{% extends 'gametube/base.html' %}
+
+{% block content %}
+<div class="history-container">
+    <h1>視聴履歴</h1>
+    <div class="videos-grid">
+        {% for entry in history %}
+            <div class="video-card">
+                <a href="{% url 'gametube:video_detail' entry.video.id %}">
+                    <div class="video-thumbnail">
+                        <img src="{{ entry.video.thumbnail.url }}" alt="{{ entry.video.title }}">
+                    </div>
+                    <div class="video-info">
+                        <h3>{{ entry.video.title }}</h3>
+                        <p>{{ entry.video.uploader.username }}</p>
+                        <p>{{ entry.video.views }}回視聴</p>
+                        <p>視聴日時: {{ entry.watched_at|date:"Y/m/d H:i" }}</p>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p class="no-videos">視聴履歴はありません</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.history-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: var(--text-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.video-card:hover {
+    transform: translateY(-3px);
+}
+
+.video-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.video-thumbnail {
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    position: relative;
+}
+
+.video-thumbnail img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-info {
+    padding: 12px;
+}
+
+.video-info h3 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.video-info p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #666;
+}
+</style>
+{% endblock %}

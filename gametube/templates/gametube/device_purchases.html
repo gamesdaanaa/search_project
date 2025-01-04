@@ -1,0 +1,68 @@
+
+{% extends 'gametube/base.html' %}
+
+{% block content %}
+<div class="devices-container">
+    <h1>デバイス購入</h1>
+    {% if user.is_authenticated %}
+        <div class="device-grid">
+            {% for device in devices %}
+                <div class="device-card">
+                    <img src="{{ device.thumbnail.url }}" alt="{{ device.title }}">
+                    <div class="device-info">
+                        <h3>{{ device.title }}</h3>
+                        <p>{{ device.description }}</p>
+                        <p>カテゴリー: {{ device.get_category_display }}</p>
+                        <a href="{{ device.url }}" target="_blank" class="purchase-btn">購入する</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>デバイスはまだありません。</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .devices-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .device-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .device-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .device-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    .device-info {
+        padding: 15px;
+    }
+    .device-info h3 {
+        margin: 0 0 10px 0;
+    }
+    .purchase-btn {
+        display: inline-block;
+        background: #ff0000;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        margin-top: 10px;
+    }
+    .purchase-btn:hover {
+        background: #cc0000;
+    }
+</style>
+{% endblock %}

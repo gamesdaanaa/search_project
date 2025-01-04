@@ -1,0 +1,343 @@
+{% extends 'gametube/base.html' %}
+
+{% block content %}
+<div class="page-container">
+    <div class="main-content">
+        <div class="video-player">
+            <video id="videoPlayer" controls preload="metadata" poster="{{ video.thumbnail.url }}">
+                <source src="{{ video.video_file.url }}" type="video/mp4" data-quality="720p">
+                お使いのブラウザは動画再生に対応していません。
+            </video>
+        </div>
+
+        <div class="video-info">
+            <h1 class="video-title">{{ video.title }}</h1>
+            <div class="video-meta">
+                <p>投稿者: <a href="{% url 'gametube:user_profile' video.uploader.username %}" class="uploader-link">{{ video.uploader.username }}</a></p>
+                <p>視聴回数: {{ video.views }}回</p>
+                <p>投稿日: {{ video.created_at|date:"Y/m/d" }}</p>
+                {% if user.is_authenticated %}
+                    <button onclick="handleLike({{ video.id }})" class="like-button {% if user in video.likes.all %}liked{% endif %}" id="likeButton">
+                        ♥ <span id="likeCount">{{ video.likes.count }}</span>
+                    </button>
+                {% endif %}
+            </div>
+            <p>{{ video.description }}</p>
+        </div>
+
+        <div id="comments" class="comments">
+            <h2>コメント</h2>
+            {% if user.is_authenticated %}
+                <form method="post" class="comment-form">
+                    {% csrf_token %}
+                    <textarea name="content" placeholder="コメントを入力..." required></textarea>
+                    <button type="submit">投稿</button>
+                </form>
+            {% endif %}
+            {% for comment in comments %}
+                <div class="comment" id="comment-{{ comment.id }}">
+                    <p><strong>{{ comment.user.username }}</strong> - {{ comment.created_at|date:"Y/m/d H:i" }}</p>
+                    <p id="comment-content-{{ comment.id }}">{{ comment.content }}</p>
+                    {% if user.is_authenticated %}
+                        <div class="comment-actions">
+                            {% if user.is_superuser or user == comment.user %}
+                                <button onclick="deleteComment({{ comment.id }})" class="delete-button">削除</button>
+                            {% endif %}
+                            {% if user == comment.user %}
+                                <button onclick="showEditForm({{ comment.id }})" class="edit-button">編集</button>
+                                <form id="edit-form-{{ comment.id }}" style="display: none;" method="post" action="{% url 'gametube:edit_comment' comment.id %}">
+                                    {% csrf_token %}
+                                    <textarea name="content">{{ comment.content }}</textarea>
+                                    <button type="submit">更新</button>
+                                    <button type="button" onclick="hideEditForm({{ comment.id }})">キャンセル</button>
+                                </form>
+                            {% endif %}
+                            <button onclick="handleCommentLike({{ comment.id }})" class="like-button {% if user in comment.likes.all %}liked{% endif %}" id="commentLikeButton-{{ comment.id }}">
+                                ♥ <span id="commentLikeCount-{{ comment.id }}">{{ comment.likes.count }}</span>
+                            </button>
+                            <button onclick="showReplyForm({{ comment.id }})" class="reply-button">返信</button>
+                        </div>
+                        <div id="replyForm-{{ comment.id }}" class="reply-form" style="display: none;">
+                            <form method="post" action="{% url 'gametube:reply_comment' comment.id %}">
+                                {% csrf_token %}
+                                <textarea name="content" placeholder="返信を入力..." required></textarea>
+                                <button type="submit">返信する</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    {% if comment.replies.exists %}
+                        <button onclick="toggleReplies({{ comment.id }})" class="toggle-replies-button" id="toggleButton-{{ comment.id }}">
+                            返信を表示
+                        </button>
+                        <div id="replies-{{ comment.id }}" class="replies-container" style="display: none;">
+                            {% for reply in comment.replies.all %}
+                                <div class="reply">
+                                    <p><strong>{{ reply.user.username }}</strong> - {{ reply.created_at|date:"Y/m/d H:i" }}</p>
+                                    <p>{{ reply.content }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="related-videos">
+        <h2>関連動画</h2>
+        {% for related_video in related_videos %}
+            <a href="{% url 'gametube:video_detail' related_video.id %}" class="related-video-item">
+                <img src="{{ related_video.thumbnail.url }}" alt="{{ related_video.title }}">
+                <div class="related-video-info">
+                    <h3>{{ related_video.title }}</h3>
+                    <p>{{ related_video.uploader.username }}</p>
+                    <p>{{ related_video.views }}回視聴</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    .page-container {
+        display: flex;
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 20px;
+        gap: 20px;
+    }
+    .main-content {
+        flex: 1;
+        max-width: 70%;
+    }
+    .related-videos {
+        width: 30%;
+        min-width: 300px;
+    }
+    .video-player {
+        width: 100%;
+        background: #000;
+        margin-bottom: 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+    }
+    video {
+        width: 100%;
+        max-height: 600px;
+    }
+    .video-info {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .video-title {
+        font-size: 24px;
+        margin: 0 0 10px 0;
+    }
+    .video-meta {
+        color: #666;
+        font-size: 14px;
+    }
+    .comments {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    .comment {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+    .comment-form {
+        margin-bottom: 20px;
+    }
+    .comment-form textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .comment-form button {
+        background: #ff0000;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .comment-form button:hover {
+        background: #cc0000;
+    }
+    .related-video-item {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        background: white;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: inherit;
+    }
+    .related-video-item img {
+        width: 160px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    .related-video-info h3 {
+        margin: 0;
+        font-size: 14px;
+    }
+    .related-video-info p {
+        margin: 5px 0;
+        font-size: 12px;
+        color: #666;
+    }
+    .like-button {
+        background: none;
+        border: 2px solid #ff0000;
+        color: #ff0000;
+        padding: 5px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+    .like-button.liked {
+        background: #ff0000;
+        color: white;
+    }
+    .like-form {
+        display: inline;
+    }
+    
+    .video-controls {
+        position: relative;
+        margin-top: 10px;
+    }
+
+    .comment-actions {
+        margin-top: 5px;
+    }
+
+    .reply-button, .comment-actions .like-button {
+        background: none;
+        border: 1px solid #ff0000;
+        color: #ff0000;
+        padding: 3px 10px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    .reply {
+        margin-left: 20px;
+        padding-left: 10px;
+        border-left: 2px solid #eee;
+        margin-top: 10px;
+    }
+
+    .reply-form {
+        margin: 10px 0;
+    }
+
+    .reply-form textarea {
+        width: 100%;
+        min-height: 60px;
+        margin-bottom: 5px;
+        padding: 5px;
+    }
+
+    .toggle-replies-button {
+        background: none;
+        border: 1px solid #ddd;
+        color: #666;
+        padding: 5px 10px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 12px;
+        margin: 5px 0;
+    }
+
+    .replies-container {
+        margin-left: 20px;
+    }
+</style>
+
+<script>
+    function toggleReplies(commentId) {
+        const repliesDiv = document.getElementById(`replies-${commentId}`);
+        const button = repliesDiv.previousElementSibling;
+        if (repliesDiv.style.display === 'none') {
+            repliesDiv.style.display = 'block';
+            button.textContent = `返信を隠す (${button.querySelector('span').textContent})`;
+        } else {
+            repliesDiv.style.display = 'none';
+            button.textContent = `返信を表示 (${button.querySelector('span').textContent})`;
+        }
+    }
+</script>
+
+<script>
+    function handleCommentLike(commentId) {
+        fetch(`{% url 'gametube:like_comment' 0 %}`.replace('0', commentId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById(`commentLikeCount-${commentId}`).textContent = data.likes_count;
+            const likeButton = document.getElementById(`commentLikeButton-${commentId}`);
+            if (data.is_liked) {
+                likeButton.classList.add('liked');
+            } else {
+                likeButton.classList.remove('liked');
+            }
+        });
+    }
+
+    function showReplyForm(commentId) {
+        const replyForm = document.getElementById(`replyForm-${commentId}`);
+        if (replyForm) {
+            replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+        }
+    }
+</script>
+{% endblock %}
+
+<script>
+function deleteComment(commentId) {
+    if (confirm('本当にこのコメントを削除しますか？')) {
+        fetch(`{% url 'gametube:delete_comment' '999999' %}`.replace('999999', commentId), {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.reload();
+            }
+        });
+    }
+}
+
+function showEditForm(commentId) {
+    document.getElementById(`comment-content-${commentId}`).style.display = 'none';
+    document.getElementById(`edit-form-${commentId}`).style.display = 'block';
+}
+
+function hideEditForm(commentId) {
+    document.getElementById(`comment-content-${commentId}`).style.display = 'block';
+    document.getElementById(`edit-form-${commentId}`).style.display = 'none';
+}
+</script>

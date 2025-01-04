@@ -1,0 +1,75 @@
+
+{% extends 'gametube/base.html' %}
+
+{% block content %}
+<div class="downloads-container">
+    <h1>ゲームをダウンロード</h1>
+    
+    <div class="downloads-grid">
+        {% for download in downloads %}
+            <div class="download-card">
+                <img src="{{ download.thumbnail.url }}" alt="{{ download.title }}">
+                <div class="download-info">
+                    <h3>{{ download.title }}</h3>
+                    <p>{{ download.description }}</p>
+                    <p class="category">カテゴリー: {{ download.get_category_display }}</p>
+                    <a href="{{ download.url }}" target="_blank" class="download-btn">ダウンロード</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>まだゲームがありません。</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.downloads-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.download-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.download-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.download-info {
+    padding: 15px;
+}
+
+.download-info h3 {
+    margin: 0 0 10px 0;
+}
+
+.category {
+    color: #666;
+    font-size: 14px;
+}
+
+.download-btn {
+    display: inline-block;
+    background: #ff0000;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,12 @@
+
+PyPDF2
+langchain
+langchain-community
+langchain-openai
+python-dotenv
+faiss-cpu
+openai
+streamlit
+django>=5.1.4
+psycopg2-binary>=2.9.9
+Pillow>=10.0.0

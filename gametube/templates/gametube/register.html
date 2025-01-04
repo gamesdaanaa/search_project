@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>アカウント作成 - GameTube</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .register-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .register-btn {
+            background: #ff0000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 10px auto;
+            display: block;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>アカウント作成</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="username" placeholder="ユーザー名" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password1" placeholder="パスワード" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password2" placeholder="パスワード(確認)" required>
+            </div>
+            <div class="form-group">
+                <input type="number" name="age" placeholder="年齢 (13歳以上)" required min="13" max="100" oninvalid="this.setCustomValidity('年齢は13歳以上で入力してください')" oninput="this.setCustomValidity('')">
+            </div>
+            <div class="form-group">
+                <label>アイコン画像:</label>
+                <input type="file" name="avatar" accept="image/*" onchange="previewImage(event)">
+                <img id="preview" class="avatar-preview" style="display: none;">
+            </div>
+            <div class="form-group">
+                <label>自己紹介:</label>
+                <textarea name="bio" placeholder="自己紹介を入力"></textarea>
+            </div>
+            <button type="submit" class="register-btn">登録</button>
+        </form>
+        <div class="login-link">
+            <a href="{% url 'gametube:login' %}">既にアカウントをお持ちの方はこちら</a>
+        </div>
+    </div>
+    <script>
+        function previewImage(event) {
+            const preview = document.getElementById('preview');
+            const file = event.target.files[0];
+            if (file) {
+                preview.style.display = 'block';
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
