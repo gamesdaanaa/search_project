@@ -11,18 +11,50 @@
         </div>
 
         <div class="video-info">
-            <h1 class="video-title">{{ video.title }}</h1>
-            <div class="video-meta">
-                <p>投稿者: <a href="{% url 'gametube:user_profile' video.uploader.username %}" class="uploader-link">{{ video.uploader.username }}</a></p>
-                <p>視聴回数: {{ video.views }}回</p>
-                <p>投稿日: {{ video.created_at|date:"Y/m/d" }}</p>
-                {% if user.is_authenticated %}
-                    <button onclick="handleLike({{ video.id }})" class="like-button {% if user in video.likes.all %}liked{% endif %}" id="likeButton">
-                        ♥ <span id="likeCount">{{ video.likes.count }}</span>
-                    </button>
-                {% endif %}
+            <h1>{{ video.title }}</h1>
+
+            <div class="channel-info">
+                <div class="channel-header">
+                    <div class="channel-avatar">
+                        {% if video.uploader.userprofile.avatar %}
+                            <img src="{{ video.uploader.userprofile.avatar.url }}" alt="チャンネルアイコン">
+                        {% else %}
+                            <div class="default-avatar">{{ video.uploader.username|make_list|first|upper }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="channel-details">
+                        <h3>{{ video.uploader.username }}</h3>
+                        <span class="subscriber-count">{{ subscribers_count }}人</span>
+                    </div>
+                    {% if user != video.uploader %}
+                        <button onclick="handleSubscribe('{{ video.uploader.username }}')" 
+                                class="subscribe-button {% if is_subscribed %}subscribed{% endif %}" 
+                                id="subscribeButton">
+                            {% if is_subscribed %}登録済み{% else %}チャンネル登録{% endif %}
+                        </button>
+                    {% endif %}
+                </div>
             </div>
+
+            <div class="video-actions">
+                <div class="like-buttons">
+                    <button onclick="handleLike()" class="action-button {% if has_liked %}liked{% endif %}">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span id="likeCount">{{ video.likes.count }}</span>
+                    </button>
+                    <button onclick="handleDislike()" class="action-button">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                </div>
+                <button onclick="handleShare()" class="action-button share-button">
+                    <i class="fas fa-share"></i>
+                    共有
+                </button>
+            </div>
+
             <p>{{ video.description }}</p>
+            <p>アップロード日: {{ video.created_at|date:"Y/m/d" }}</p>
+            <p>視聴回数: {{ video.views }}回</p>
         </div>
 
         <div id="comments" class="comments">
@@ -187,7 +219,7 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         transition: transform 0.2s, box-shadow 0.2s;
     }
-    
+
     .related-video-item:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -224,7 +256,7 @@
     .like-form {
         display: inline;
     }
-    
+
     .video-controls {
         position: relative;
         margin-top: 10px;
@@ -277,6 +309,101 @@
     .replies-container {
         margin-left: 20px;
     }
+
+    .channel-info {
+        margin: 20px 0;
+        padding: 15px;
+        border-radius: 8px;
+        background: #f8f8f8;
+    }
+
+    .channel-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .channel-avatar img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .default-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #ff0000;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .channel-details {
+        flex-grow: 1;
+    }
+
+    .channel-details h3 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .subscriber-count {
+        font-size: 14px;
+        color: #606060;
+    }
+
+    .video-actions {
+        display: flex;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .like-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-button {
+        background: #f0f0f0;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-button:hover {
+        background: #e0e0e0;
+    }
+
+    .action-button.liked {
+        background: #065fd4;
+        color: white;
+    }
+
+    .subscribe-button {
+        background: #ff0000;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .subscribe-button.subscribed {
+        background: #606060;
+    }
+
+    .share-button {
+        margin-left: auto;
+    }
 </style>
 
 <script>
@@ -321,8 +448,6 @@
         }
     }
 </script>
-{% endblock %}
-
 <script>
 function deleteComment(commentId) {
     if (confirm('本当にこのコメントを削除しますか？')) {
@@ -349,3 +474,24 @@ function hideEditForm(commentId) {
     document.getElementById(`edit-form-${commentId}`).style.display = 'none';
 }
 </script>
+
+<script>
+function handleLike() {
+    // Like機能の実装
+}
+
+function handleDislike() {
+    // Dislike機能の実装
+}
+
+function handleShare() {
+    // 共有機能の実装
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ video.title }}',
+            url: window.location.href
+        });
+    }
+}
+</script>
+{% endblock %}
