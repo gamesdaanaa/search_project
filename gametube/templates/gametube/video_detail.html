@@ -477,21 +477,63 @@ function hideEditForm(commentId) {
 
 <script>
 function handleLike() {
-    // Like機能の実装
+    fetch(`/video/{{ video.id }}/like/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const likeButton = document.querySelector('.like-buttons button:first-child');
+        const likeCount = document.getElementById('likeCount');
+        likeCount.textContent = data.likes_count;
+        if (data.is_liked) {
+            likeButton.classList.add('liked');
+        } else {
+            likeButton.classList.remove('liked');
+        }
+    });
 }
 
 function handleDislike() {
-    // Dislike機能の実装
+    const dislikeButton = document.querySelector('.like-buttons button:last-child');
+    dislikeButton.classList.toggle('liked');
 }
 
 function handleShare() {
-    // 共有機能の実装
-    if (navigator.share) {
-        navigator.share({
-            title: '{{ video.title }}',
-            url: window.location.href
-        });
-    }
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        alert('URLをコピーしました');
+    }).catch(err => {
+        console.error('URLのコピーに失敗しました:', err);
+    });
+}
+
+function handleSubscribe(username) {
+    fetch(`/subscribe/${username}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const button = document.getElementById('subscribeButton');
+        const count = document.querySelector('.subscriber-count');
+        if (data.subscribed) {
+            button.textContent = '登録済み';
+            button.classList.add('subscribed');
+        } else {
+            button.textContent = 'チャンネル登録';
+            button.classList.remove('subscribed');
+        }
+        if (count) {
+            count.textContent = `${data.subscribers_count}人`;
+        }
+    });
 }
 </script>
 {% endblock %}
