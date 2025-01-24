@@ -5,10 +5,6 @@
 <div class="boards-container">
     <h1>ゲーム掲示板一覧</h1>
     
-    <form method="GET" class="search-container">
-        <input type="text" name="q" value="{{ query }}" placeholder="掲示板を検索..." class="search-input">
-    </form>
-    
     {% if user.is_authenticated %}
     <form method="post" class="board-form">
         {% csrf_token %}
