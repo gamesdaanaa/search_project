@@ -303,7 +303,12 @@ def game_boards(request):
                 )
         elif delete_id and (request.user.is_superuser or request.user.is_staff):
             GameBoard.objects.filter(id=delete_id).delete()
-    boards = GameBoard.objects.all().order_by('-created_at')
+    
+    query = request.GET.get('q', '')
+    boards = GameBoard.objects.all()
+    if query:
+        boards = boards.filter(game__icontains=query)
+    boards = boards.order_by('-created_at')
     return render(request, 'gametube/game_boards.html', {
         'boards': boards,
         'can_delete': request.user.is_superuser or request.user.is_staff
