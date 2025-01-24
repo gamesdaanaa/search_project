@@ -217,9 +217,16 @@ def game_downloads(request):
             uploader=request.user
         )
         return redirect('gametube:game_downloads')
-        
-    downloads = GameDownload.objects.all().order_by('-created_at')
-    return render(request, 'gametube/game_downloads.html', {'downloads': downloads})
+    
+    query = request.GET.get('q', '')
+    downloads = GameDownload.objects.all()
+    if query:
+        downloads = downloads.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+    downloads = downloads.order_by('-created_at')
+    return render(request, 'gametube/game_downloads.html', {'downloads': downloads, 'query': query})
 
 @login_required
 def device_purchases(request):
@@ -239,9 +246,16 @@ def device_purchases(request):
             uploader=request.user
         )
         return redirect('gametube:device_purchases')
-        
-    devices = DevicePurchase.objects.all().order_by('-created_at')
-    return render(request, 'gametube/device_purchases.html', {'devices': devices})
+    
+    query = request.GET.get('q', '')
+    devices = DevicePurchase.objects.all()
+    if query:
+        devices = devices.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+    devices = devices.order_by('-created_at')
+    return render(request, 'gametube/device_purchases.html', {'devices': devices, 'query': query})
 
 def register_view(request):
     if request.method == 'POST':
