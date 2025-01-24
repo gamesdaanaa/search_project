@@ -25,10 +25,7 @@ def home(request):
         videos = videos.filter(age_restriction='all')
     
     if query:
-        videos = videos.filter(
-            Q(title__icontains=query) |
-            Q(description__icontains=query)
-        )
+        videos = videos.filter(title__icontains=query)
         users = User.objects.filter(username__icontains=query)
         return render(request, 'gametube/home.html', {
             'videos': videos,
@@ -221,10 +218,7 @@ def game_downloads(request):
     query = request.GET.get('q', '')
     downloads = GameDownload.objects.all()
     if query:
-        downloads = downloads.filter(
-            Q(title__icontains=query) |
-            Q(description__icontains=query)
-        )
+        downloads = downloads.filter(title__icontains=query)
     downloads = downloads.order_by('-created_at')
     return render(request, 'gametube/game_downloads.html', {'downloads': downloads, 'query': query})
 
@@ -250,10 +244,7 @@ def device_purchases(request):
     query = request.GET.get('q', '')
     devices = DevicePurchase.objects.all()
     if query:
-        devices = devices.filter(
-            Q(title__icontains=query) |
-            Q(description__icontains=query)
-        )
+        devices = devices.filter(title__icontains=query)
     devices = devices.order_by('-created_at')
     return render(request, 'gametube/device_purchases.html', {'devices': devices, 'query': query})
 
