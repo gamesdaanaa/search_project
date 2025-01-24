@@ -335,8 +335,8 @@
     <div class="header">
         <a href="{% url 'gametube:home' %}" class="logo">GameTube</a>
         <div class="search-container">
-            <form method="get" action="{% url 'gametube:home' %}">
-                <input type="text" name="q" value="{{ query }}" placeholder="検索..." class="search-input">
+            <form method="get" action="{% if request.resolver_match.url_name == 'device_purchases' %}{% url 'gametube:device_purchases' %}{% elif request.resolver_match.url_name == 'game_downloads' %}{% url 'gametube:game_downloads' %}{% elif request.resolver_match.url_name == 'game_boards' %}{% url 'gametube:game_boards' %}{% else %}{% url 'gametube:home' %}{% endif %}">
+                <input type="text" name="q" value="{{ query }}" placeholder="{% if request.resolver_match.url_name == 'device_purchases' %}デバイスを検索...{% elif request.resolver_match.url_name == 'game_downloads' %}ゲームを検索...{% elif request.resolver_match.url_name == 'game_boards' %}掲示板を検索...{% else %}動画を検索...{% endif %}" class="search-input">
             </form>
         </div>
 

@@ -3,10 +3,6 @@
 {% block content %}
 <div class="devices-container">
     <h1>デバイス購入</h1>
-    <form method="GET" class="search-form">
-        <input type="text" name="q" placeholder="デバイスを検索..." value="{{ query }}">
-        <button type="submit">検索</button>
-    </form>
     {% if user.is_authenticated %}
         <div class="device-grid">
             {% for device in devices %}

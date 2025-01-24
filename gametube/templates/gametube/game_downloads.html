@@ -1,14 +1,9 @@
-
 {% extends 'gametube/base.html' %}
 
 {% block content %}
 <div class="downloads-container">
     <h1>ゲームをダウンロード</h1>
-    <form method="GET" class="search-form">
-        <input type="text" name="q" placeholder="ゲームを検索..." value="{{ query }}">
-        <button type="submit">検索</button>
-    </form>
-    
+
     <div class="downloads-grid">
         {% for download in downloads %}
             <div class="download-card">
