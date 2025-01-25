@@ -346,10 +346,15 @@ def board_detail(request, board_id):
                 message=message,
                 image=image
             )
-    messages = ChatMessage.objects.filter(board=board).order_by('-created_at')
+    query = request.GET.get('q', '')
+    messages = ChatMessage.objects.filter(board=board)
+    if query:
+        messages = messages.filter(message__icontains=query)
+    messages = messages.order_by('-created_at')
     return render(request, 'gametube/game_board.html', {
         'board': board,
-        'messages': messages
+        'messages': messages,
+        'query': query
     })
 
 @receiver(post_save, sender=Video)
