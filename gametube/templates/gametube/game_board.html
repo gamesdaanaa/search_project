@@ -1,10 +1,9 @@
-
 {% extends 'gametube/base.html' %}
 
 {% block content %}
 <div class="board-container">
     <h1>{{ board.game }}の掲示板</h1>
-    
+
     <div class="chat-messages">
         {% for message in messages %}
         <div class="message">
@@ -21,9 +20,8 @@
         <div class="message-input-container">
             <textarea name="message" placeholder="メッセージを入力..." id="messageInput"></textarea>
             <div class="message-controls">
-                <button type="button" id="emojiButton">😊</button>
                 <label for="imageUpload" class="image-upload-label">
-                    📷
+                    📤
                     <input type="file" id="imageUpload" name="image" accept="image/*" style="display: none;">
                 </label>
             </div>
@@ -31,7 +29,6 @@
         <div id="imagePreview" class="image-preview"></div>
         <button type="submit">送信</button>
     </form>
-    <div id="emojiPicker" class="emoji-picker"></div>
     {% endif %}
 </div>
 
@@ -100,18 +97,6 @@
     padding: 5px;
 }
 
-.emoji-picker {
-    display: none;
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
 .image-preview {
     max-width: 200px;
     margin-top: 10px;
@@ -132,28 +117,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const emojiButton = document.getElementById('emojiButton');
-    const emojiPicker = document.getElementById('emojiPicker');
-    const messageInput = document.getElementById('messageInput');
     const imageUpload = document.getElementById('imageUpload');
     const imagePreview = document.getElementById('imagePreview');
-
-    // 絵文字ピッカー
-    const emojis = ['😊','😂','🥰','😎','👍','❤️','🎮','🎲','🎯','🎪','🎨','🎭','🎪','🎢','🎡'];
-    emojiPicker.innerHTML = emojis.map(emoji => 
-        `<span class="emoji" style="cursor:pointer;padding:5px;">${emoji}</span>`
-    ).join('');
-
-    emojiButton.addEventListener('click', () => {
-        emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
-    });
-
-    emojiPicker.addEventListener('click', (e) => {
-        if (e.target.classList.contains('emoji')) {
-            messageInput.value += e.target.textContent;
-            emojiPicker.style.display = 'none';
-        }
-    });
 
     // 画像プレビュー
     imageUpload.addEventListener('change', () => {
