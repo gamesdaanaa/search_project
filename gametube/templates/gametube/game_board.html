@@ -9,7 +9,14 @@
         <div class="message">
             <strong>{{ message.user.username }}</strong>
             <span class="timestamp">{{ message.created_at|date:"Y/m/d H:i" }}</span>
-            <p>{{ message.message }}</p>
+            {% if message.message %}
+                <p>{{ message.message }}</p>
+            {% endif %}
+            {% if message.image %}
+                <div class="message-image">
+                    <img src="{{ message.image.url }}" alt="Attached image">
+                </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
