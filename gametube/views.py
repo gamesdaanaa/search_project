@@ -317,6 +317,12 @@ def game_boards(request):
 @login_required
 def board_detail(request, board_id):
     board = get_object_or_404(GameBoard, id=board_id)
+    user_age = request.user.userprofile.age
+    
+    if board.age_restriction == 'r18' and user_age < 18:
+        return redirect('gametube:game_boards')
+    elif board.age_restriction == 'r15' and user_age < 15:
+        return redirect('gametube:game_boards')
     if request.method == 'POST':
         message = request.POST.get('message')
         image = request.FILES.get('image')

@@ -114,7 +114,14 @@ class DevicePurchase(models.Model):
 
 
 class GameBoard(models.Model):
+    AGE_RESTRICTION_CHOICES = [
+        ('all', '制限なし'),
+        ('r15', '15歳以上'),
+        ('r18', '18歳以上'),
+    ]
+    
     game = models.CharField(max_length=100)
+    age_restriction = models.CharField(max_length=5, choices=AGE_RESTRICTION_CHOICES, default='all')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
