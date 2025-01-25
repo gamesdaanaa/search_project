@@ -319,11 +319,13 @@ def board_detail(request, board_id):
     board = get_object_or_404(GameBoard, id=board_id)
     if request.method == 'POST':
         message = request.POST.get('message')
-        if message:
+        image = request.FILES.get('image')
+        if message or image:
             ChatMessage.objects.create(
                 board=board,
                 user=request.user,
-                message=message
+                message=message,
+                image=image
             )
     messages = ChatMessage.objects.filter(board=board).order_by('-created_at')
     return render(request, 'gametube/game_board.html', {
