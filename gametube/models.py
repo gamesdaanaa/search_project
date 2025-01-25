@@ -47,7 +47,7 @@ class Video(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     views = models.IntegerField(default=0)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='other')
-    age_restriction = models.CharField(max_length=5, choices=AGE_RESTRICTION_CHOICES, default='all')
+    age_restriction = models.CharField(max_length=7, choices=AGE_RESTRICTION_CHOICES, default='all')
     likes = models.ManyToManyField(User, related_name='liked_videos', blank=True)
 
     def __str__(self):
@@ -117,7 +117,7 @@ class GameBoard(models.Model):
     ]
 
     game = models.CharField(max_length=100)
-    age_restriction = models.CharField(max_length=5, choices=AGE_RESTRICTION_CHOICES, default='all')
+    age_restriction = models.CharField(max_length=7, choices=AGE_RESTRICTION_CHOICES, default='all')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
