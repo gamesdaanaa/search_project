@@ -1,5 +1,3 @@
-
-
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -21,11 +19,10 @@ from django.contrib.auth.models import User
 
 class Video(models.Model):
     AGE_RESTRICTION_CHOICES = [
-        ('all', '制限なし'),
-        ('r15', '15歳以上'),
-        ('r18', '18歳以上'),
+        ('under18', '18歳未満'),
+        ('over18', '18歳以上'),
     ]
-    
+
     CATEGORY_CHOICES = [
         ('new_game', '新規ゲーム'),
         ('fps_game', 'FPSゲーム'),
@@ -41,7 +38,7 @@ class Video(models.Model):
         ('mmo_game', 'MMOゲーム'),
         ('horror_game', 'ホラーゲーム'),
     ]
-    
+
     title = models.CharField(max_length=100)
     description = models.TextField()
     video_file = models.FileField(upload_to='videos/')
@@ -115,15 +112,14 @@ class DevicePurchase(models.Model):
 
 class GameBoard(models.Model):
     AGE_RESTRICTION_CHOICES = [
-        ('all', '制限なし'),
-        ('r15', '15歳以上'),
-        ('r18', '18歳以上'),
+        ('under18', '18歳未満'),
+        ('over18', '18歳以上'),
     ]
-    
+
     game = models.CharField(max_length=100)
     age_restriction = models.CharField(max_length=5, choices=AGE_RESTRICTION_CHOICES, default='all')
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     def __str__(self):
         return self.game
 
@@ -133,7 +129,7 @@ class ChatMessage(models.Model):
     message = models.TextField()
     image = models.ImageField(upload_to='chat_images/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     def __str__(self):
         return f"{self.user.username}: {self.message}"
 
@@ -143,7 +139,7 @@ class Notification(models.Model):
     link = models.CharField(max_length=255)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         ordering = ['-created_at']
 

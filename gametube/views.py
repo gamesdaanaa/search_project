@@ -11,9 +11,9 @@ from .models import Video, Comment, Subscription, UserProfile, GameDownload, Dev
 def home(request):
     query = request.GET.get('q', '')
     category = request.GET.get('category', '')
-    
+
     videos = Video.objects.all()
-    
+
     if request.user.is_authenticated:
         user_age = request.user.userprofile.age
         if user_age:
@@ -23,7 +23,7 @@ def home(request):
                 videos = videos.exclude(age_restriction='r18')
     else:
         videos = videos.filter(age_restriction='all')
-    
+
     if query:
         videos = videos.filter(title__icontains=query)
         users = User.objects.filter(username__icontains=query)
@@ -32,10 +32,10 @@ def home(request):
             'users': users,
             'query': query
         })
-    
+
     if category:
         videos = videos.filter(category=category)
-    
+
     videos = videos.order_by('-created_at')
     return render(request, 'gametube/home.html', {'videos': videos, 'query': query})
 
@@ -47,7 +47,7 @@ def video_detail(request, video_id):
     video = get_object_or_404(Video, id=video_id)
     video.views += 1
     video.save()
-    
+
     if request.user.is_authenticated:
         WatchHistory.objects.create(user=request.user, video=video)
     if 'range' in request.headers:
@@ -68,7 +68,7 @@ def video_detail(request, video_id):
         response['Content-Range'] = f'bytes {start}-{end}/{file_size}'
         return response
     comments = Comment.objects.filter(video=video).order_by('-created_at')
-    
+
     if request.method == 'POST' and request.user.is_authenticated:
         content = request.POST.get('content')
         if content:
@@ -78,7 +78,7 @@ def video_detail(request, video_id):
                 content=content
             )
             return redirect(request.path + '#comments')
-            
+
     related_videos = Video.objects.exclude(id=video_id).order_by('-created_at')[:5]
     return render(request, 'gametube/video_detail.html', {
         'video': video,
@@ -95,7 +95,7 @@ def upload_video(request):
         description = request.POST.get('description')
         video_file = request.FILES.get('video_file')
         thumbnail = request.FILES.get('thumbnail')
-        
+
         category = request.POST.get('category')
         if title and video_file and thumbnail and category:
             Video.objects.create(
@@ -107,7 +107,7 @@ def upload_video(request):
                 uploader=request.user
             )
             return redirect('gametube:home')
-            
+
     return render(request, 'gametube/upload.html')
 
 def login_view(request):
@@ -130,12 +130,12 @@ from django.http import JsonResponse
 def like_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
     is_liked = request.user in video.likes.all()
-    
+
     if is_liked:
         video.likes.remove(request.user)
     else:
         video.likes.add(request.user)
-        
+
     return JsonResponse({
         'likes_count': video.likes.count(),
         'is_liked': not is_liked
@@ -158,13 +158,13 @@ def user_profile(request, username):
             profile.age = request.POST['age']
         profile.save()
         return redirect('gametube:user_profile', username=username)
-    
+
     if request.user.is_authenticated:
         is_subscribed = Subscription.objects.filter(
             subscriber=request.user,
             channel=profile_user
         ).exists()
-    
+
     return render(request, 'gametube/user_profile.html', {
         'profile_user': profile_user,
         'videos': videos,
@@ -175,7 +175,7 @@ def user_profile(request, username):
 @login_required
 def subscribe(request, username):
     channel = get_object_or_404(User, username=username)
-    
+
     if request.user != channel:
         subscription, created = Subscription.objects.get_or_create(
             subscriber=request.user,
@@ -183,7 +183,7 @@ def subscribe(request, username):
         )
         if not created:
             subscription.delete()
-            
+
     return JsonResponse({
         'subscribed': created if request.user != channel else False,
         'subscribers_count': channel.subscribers.count()
@@ -204,7 +204,7 @@ def game_downloads(request):
         category = request.POST.get('category')
         thumbnail = request.FILES.get('thumbnail')
         url = request.POST.get('url')
-        
+
         GameDownload.objects.create(
             title=title,
             description=description,
@@ -214,7 +214,7 @@ def game_downloads(request):
             uploader=request.user
         )
         return redirect('gametube:game_downloads')
-    
+
     query = request.GET.get('q', '')
     downloads = GameDownload.objects.all()
     if query:
@@ -230,7 +230,7 @@ def device_purchases(request):
         category = request.POST.get('category')
         thumbnail = request.FILES.get('thumbnail')
         url = request.POST.get('url')
-        
+
         DevicePurchase.objects.create(
             title=title,
             description=description,
@@ -240,7 +240,7 @@ def device_purchases(request):
             uploader=request.user
         )
         return redirect('gametube:device_purchases')
-    
+
     query = request.GET.get('q', '')
     devices = DevicePurchase.objects.all()
     if query:
@@ -254,37 +254,37 @@ def register_view(request):
         password1 = request.POST['password1']
         password2 = request.POST['password2']
         age = request.POST.get('age')
-        
+
         if password1 != password2:
             return render(request, 'gametube/register.html', {'error': 'パスワードが一致しません'})
-        
+
         if User.objects.filter(username=username).exists():
             return render(request, 'gametube/register.html', {'error': 'このユーザー名は既に使用されています'})
-        
+
         try:
             user = User.objects.create_user(username=username, password=password1)
-            
+
             # UserProfileは signals.pyで自動作成されるため、既存のプロフィールを取得
             profile = UserProfile.objects.get(user=user)
-            
+
             if 'avatar' in request.FILES:
                 profile.avatar = request.FILES['avatar']
-            
+
             if 'bio' in request.POST and request.POST['bio']:
                 profile.bio = request.POST['bio']
-            
+
             if age:
                 profile.age = age
-                
+
             profile.save()
             login(request, user)
             return redirect('gametube:home')
-            
+
         except Exception as e:
             if user:
                 user.delete()
             return render(request, 'gametube/register.html', {'error': 'アカウント作成に失敗しました'})
-        
+
     return render(request, 'gametube/register.html')
 
 @login_required
@@ -307,18 +307,18 @@ def game_boards(request):
                 )
         elif delete_id and (request.user.is_superuser or request.user.is_staff):
             GameBoard.objects.filter(id=delete_id).delete()
-    
+
     query = request.GET.get('q', '')
     boards = GameBoard.objects.all()
     if request.user.is_authenticated:
         user_age = request.user.userprofile.age
-        if user_age < 15:
-            boards = boards.filter(age_restriction='all')
-        elif user_age < 18:
-            boards = boards.exclude(age_restriction='r18')
+        if user_age < 18:
+            boards = boards.filter(age_restriction='under18')
+        else:
+            boards = boards.all()
     else:
         boards = boards.filter(age_restriction='all')
-        
+
     if query:
         boards = boards.filter(game__icontains=query)
     boards = boards.order_by('-created_at')
@@ -331,7 +331,7 @@ def game_boards(request):
 def board_detail(request, board_id):
     board = get_object_or_404(GameBoard, id=board_id)
     user_age = request.user.userprofile.age
-    
+
     if board.age_restriction == 'r18' and user_age < 18:
         return redirect('gametube:game_boards')
     elif board.age_restriction == 'r15' and user_age < 15:
