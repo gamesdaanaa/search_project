@@ -9,6 +9,11 @@
     <form method="post" class="board-form">
         {% csrf_token %}
         <input type="text" name="game" placeholder="ゲーム名を入力..." required>
+        <select name="age_restriction" required>
+            <option value="all">制限なし</option>
+            <option value="r15">15歳以上</option>
+            <option value="r18">18歳以上</option>
+        </select>
         <button type="submit">掲示板を作成</button>
     </form>
     {% endif %}

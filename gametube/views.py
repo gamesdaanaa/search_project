@@ -292,8 +292,12 @@ def game_boards(request):
     if request.method == 'POST':
         game = request.POST.get('game')
         delete_id = request.POST.get('delete')
+        age_restriction = request.POST.get('age_restriction', 'all')
         if game:
-            board = GameBoard.objects.create(game=game)
+            board = GameBoard.objects.create(
+                game=game,
+                age_restriction=age_restriction
+            )
             # 掲示板作成時に全ユーザーに通知を送信
             for user in User.objects.all():
                 Notification.objects.create(
@@ -306,6 +310,15 @@ def game_boards(request):
     
     query = request.GET.get('q', '')
     boards = GameBoard.objects.all()
+    if request.user.is_authenticated:
+        user_age = request.user.userprofile.age
+        if user_age < 15:
+            boards = boards.filter(age_restriction='all')
+        elif user_age < 18:
+            boards = boards.exclude(age_restriction='r18')
+    else:
+        boards = boards.filter(age_restriction='all')
+        
     if query:
         boards = boards.filter(game__icontains=query)
     boards = boards.order_by('-created_at')
