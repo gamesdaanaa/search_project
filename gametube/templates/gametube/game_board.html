@@ -18,10 +18,10 @@
     <form method="post" class="message-form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="message-input-container">
-            <textarea name="message" placeholder="メッセージを入力..." id="messageInput"></textarea>
-            <div class="message-controls">
+            <div class="message-input-wrapper">
+                <textarea name="message" placeholder="メッセージを入力..." id="messageInput"></textarea>
                 <label for="imageUpload" class="image-upload-label">
-                    📤
+                    📎
                     <input type="file" id="imageUpload" name="image" accept="image/*" style="display: none;">
                 </label>
             </div>
@@ -82,19 +82,34 @@
     margin-bottom: 10px;
 }
 
-.message-controls {
+.message-input-wrapper {
     display: flex;
-    gap: 10px;
-    margin-top: 5px;
+    align-items: flex-start;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
 }
 
-.message-controls button,
+.message-input-wrapper textarea {
+    border: none;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    min-height: 40px;
+    resize: vertical;
+}
+
+.message-input-wrapper textarea:focus {
+    outline: none;
+}
+
 .image-upload-label {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     padding: 5px;
+    color: #666;
 }
 
 .image-preview {
