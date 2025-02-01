@@ -108,3 +108,24 @@ def user_profile(request, username):
     }
     return render(request, 'gametube/user_profile.html', context)
 
+@login_required
+def subscribe(request, username):
+    channel = get_object_or_404(User, username=username)
+    subscription, created = Subscription.objects.get_or_create(
+        subscriber=request.user,
+        channel=channel
+    )
+    
+    if not created:
+        subscription.delete()
+        subscribed = False
+    else:
+        subscribed = True
+    
+    subscribers_count = Subscription.objects.filter(channel=channel).count()
+    
+    return JsonResponse({
+        'subscribed': subscribed,
+        'subscribers_count': subscribers_count
+    })
+
