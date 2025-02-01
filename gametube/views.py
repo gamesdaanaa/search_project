@@ -28,6 +28,7 @@ def home(request):
     upload_date = request.GET.get('upload_date', '')
     sort_by = request.GET.get('sort_by', '')
 
+    users = None
     if query:
         videos = videos.filter(
             Q(title__icontains=query) |
