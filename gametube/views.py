@@ -135,3 +135,84 @@ def subscriptions(request):
     videos = Video.objects.filter(uploader__in=[sub.channel for sub in user_subscriptions]).order_by('-created_at')
     return render(request, 'gametube/subscriptions.html', {'videos': videos})
 
+@login_required
+def game_downloads(request):
+    downloads = GameDownload.objects.all().order_by('-created_at')
+    return render(request, 'gametube/game_downloads.html', {'downloads': downloads})
+
+@login_required
+def device_purchases(request):
+    devices = DevicePurchase.objects.all().order_by('-created_at')
+    return render(request, 'gametube/device_purchases.html', {'devices': devices})
+
+@login_required
+def game_boards(request):
+    boards = GameBoard.objects.all().order_by('-created_at')
+    return render(request, 'gametube/game_boards.html', {'boards': boards})
+
+@login_required
+def board_detail(request, board_id):
+    board = get_object_or_404(GameBoard, id=board_id)
+    messages = ChatMessage.objects.filter(board=board).order_by('-created_at')
+    return render(request, 'gametube/game_board.html', {'board': board, 'messages': messages})
+
+@login_required
+def mark_notification_read(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return JsonResponse({'status': 'success'})
+
+@login_required
+def liked_videos(request):
+    likes = Like.objects.filter(user=request.user).order_by('-created_at')
+    videos = [like.video for like in likes]
+    return render(request, 'gametube/liked_videos.html', {'videos': videos})
+
+@login_required
+def watch_history(request):
+    history = WatchHistory.objects.filter(user=request.user).order_by('-watched_at')
+    return render(request, 'gametube/watch_history.html', {'history': history})
+
+@login_required
+def reply_comment(request, comment_id):
+    if request.method == 'POST':
+        parent_comment = get_object_or_404(Comment, id=comment_id)
+        content = request.POST.get('content')
+        if content:
+            Comment.objects.create(
+                video=parent_comment.video,
+                user=request.user,
+                content=content,
+                parent=parent_comment
+            )
+    return redirect('gametube:video_detail', video_id=parent_comment.video.id)
+
+@login_required
+def like_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.user in comment.likes.all():
+        comment.likes.remove(request.user)
+        liked = False
+    else:
+        comment.likes.add(request.user)
+        liked = True
+    return JsonResponse({'liked': liked, 'likes_count': comment.likes.count()})
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if comment.user == request.user:
+        comment.delete()
+    return redirect('gametube:video_detail', video_id=comment.video.id)
+
+@login_required
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.method == 'POST' and comment.user == request.user:
+        content = request.POST.get('content')
+        if content:
+            comment.content = content
+            comment.save()
+    return redirect('gametube:video_detail', video_id=comment.video.id)
+
