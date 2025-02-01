@@ -129,3 +129,9 @@ def subscribe(request, username):
         'subscribers_count': subscribers_count
     })
 
+@login_required
+def subscriptions(request):
+    user_subscriptions = Subscription.objects.filter(subscriber=request.user)
+    videos = Video.objects.filter(uploader__in=[sub.channel for sub in user_subscriptions]).order_by('-created_at')
+    return render(request, 'gametube/subscriptions.html', {'videos': videos})
+
