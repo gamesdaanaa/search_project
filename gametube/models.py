@@ -159,3 +159,14 @@ class WatchHistory(models.Model):
     def __str__(self):
         return f"{self.user.username} watched {self.video.title}"
 
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'video')
+
+    def __str__(self):
+        return f"{self.user.username} liked {self.video.title}"
+
