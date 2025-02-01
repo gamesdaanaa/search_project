@@ -1,10 +1,23 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
+from .models import Video, UserProfile, Comment, Subscription, Like
 
+@login_required
+def like_video(request, video_id):
+    video = get_object_or_404(Video, id=video_id)
+    like, created = Like.objects.get_or_create(user=request.user, video=video)
+
+    if not created:
+        like.delete()
+        return JsonResponse({'status': 'unliked'})
+
+    return JsonResponse({'status': 'liked'})
+
+@login_required
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -26,16 +39,15 @@ def register_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email')
-        
+
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
             return render(request, 'gametube/register.html')
-            
+
         user = User.objects.create_user(username=username, password=password, email=email)
         login(request, user)
         return redirect('gametube:home')
     return render(request, 'gametube/register.html')
-from .models import Video, UserProfile, Comment, Subscription
 
 @login_required
 def upload_video(request):
@@ -58,7 +70,7 @@ def upload_video(request):
                 age_restriction=age_restriction
             )
             return redirect('gametube:video_detail', video_id=video.id)
-    
+
     return render(request, 'gametube/upload.html')
 
 def home(request):
@@ -72,7 +84,7 @@ def video_detail(request, video_id):
         like = Like.objects.filter(user=request.user, video=video).first()
     else:
         like = None
-    
+
     context = {
         'video': video,
         'comments': comments,
