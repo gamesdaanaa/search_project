@@ -91,3 +91,20 @@ def video_detail(request, video_id):
         'like': like
     }
     return render(request, 'gametube/video_detail.html', context)
+
+def user_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    videos = Video.objects.filter(uploader=user).order_by('-created_at')
+    
+    is_subscribed = False
+    if request.user.is_authenticated:
+        is_subscribed = Subscription.objects.filter(subscriber=request.user, channel=user).exists()
+    
+    context = {
+        'profile_user': user,
+        'videos': videos,
+        'is_subscribed': is_subscribed,
+        'subscribers_count': Subscription.objects.filter(channel=user).count(),
+    }
+    return render(request, 'gametube/user_profile.html', context)
+
