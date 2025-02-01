@@ -151,9 +151,30 @@ class WatchHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     watched_at = models.DateTimeField(auto_now=True)
+    watch_duration = models.IntegerField(default=0)  # 視聴時間（秒）
 
     class Meta:
         ordering = ['-watched_at']
 
     def __str__(self):
         return f"{self.user.username} watched {self.video.title}"
+
+class Playlist(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    videos = models.ManyToManyField(Video, through='PlaylistItem')
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_public = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+class PlaylistItem(models.Model):
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    order = models.IntegerField()
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order']

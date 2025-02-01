@@ -24,14 +24,50 @@ def home(request):
     else:
         videos = videos.filter(age_restriction='all')
 
+    duration = request.GET.get('duration', '')
+    upload_date = request.GET.get('upload_date', '')
+    sort_by = request.GET.get('sort_by', '')
+
     if query:
-        videos = videos.filter(title__icontains=query)
+        videos = videos.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
         users = User.objects.filter(username__icontains=query)
-        return render(request, 'gametube/home.html', {
-            'videos': videos,
-            'users': users,
-            'query': query
-        })
+
+    if duration:
+        if duration == 'short':
+            videos = videos.filter(video_file__duration__lte=300)  # 5分以下
+        elif duration == 'medium':
+            videos = videos.filter(video_file__duration__gt=300, video_file__duration__lte=1200)  # 5-20分
+        elif duration == 'long':
+            videos = videos.filter(video_file__duration__gt=1200)  # 20分以上
+
+    if upload_date:
+        today = timezone.now()
+        if upload_date == 'today':
+            videos = videos.filter(created_at__date=today.date())
+        elif upload_date == 'week':
+            videos = videos.filter(created_at__gte=today-timedelta(days=7))
+        elif upload_date == 'month':
+            videos = videos.filter(created_at__gte=today-timedelta(days=30))
+
+    if sort_by:
+        if sort_by == 'views':
+            videos = videos.order_by('-views')
+        elif sort_by == 'likes':
+            videos = videos.annotate(likes_count=Count('likes')).order_by('-likes_count')
+        elif sort_by == 'newest':
+            videos = videos.order_by('-created_at')
+
+    return render(request, 'gametube/home.html', {
+        'videos': videos,
+        'users': users,
+        'query': query,
+        'duration': duration,
+        'upload_date': upload_date,
+        'sort_by': sort_by
+    })
 
     if category:
         videos = videos.filter(category=category)
