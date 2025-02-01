@@ -3,6 +3,38 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('gametube:home')
+        else:
+            messages.error(request, 'Invalid username or password')
+    return render(request, 'gametube/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('gametube:home')
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists')
+            return render(request, 'gametube/register.html')
+            
+        user = User.objects.create_user(username=username, password=password, email=email)
+        login(request, user)
+        return redirect('gametube:home')
+    return render(request, 'gametube/register.html')
 from .models import Video, UserProfile, Comment, Subscription
 
 @login_required
