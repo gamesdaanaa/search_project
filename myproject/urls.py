@@ -22,7 +22,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('management-console-secret/', admin.site.urls),  # 管理サイトのURLを変更
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include('gametube.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
