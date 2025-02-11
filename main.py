@@ -1,9 +1,13 @@
 
-import os
 from myproject.wsgi import application
+import os
+from django.core.wsgi import get_wsgi_application
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     from django.core.management import execute_from_command_line
-    port = int(os.environ.get("PORT", 8080))
+    import sys
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
-    execute_from_command_line(["", "runserver", f"0.0.0.0:{port}", "--noreload"])
+    if len(sys.argv) == 1:
+        sys.argv.append('runserver')
+        sys.argv.append('0.0.0.0:3000')
+    execute_from_command_line(sys.argv)
