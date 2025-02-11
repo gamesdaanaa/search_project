@@ -107,11 +107,11 @@ finally:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neondb',
-        'USER': 'neondb_owner',
-        'PASSWORD': '6xSQLkqd0pre',
-        'HOST': 'ep-jolly-waterfall-a1owq4gt.ap-southeast-1.aws.neon.tech',
-        'PORT': '5432',
+        'NAME': os.getenv('PGDATABASE', 'neondb'),
+        'USER': os.getenv('PGUSER', 'default'),
+        'PASSWORD': os.getenv('PGPASSWORD', 'your-password'),
+        'HOST': os.getenv('PGHOST', 'ep-cool-wood-123456.us-east-2.aws.neon.tech'),
+        'PORT': os.getenv('PGPORT', '5432'),
         'OPTIONS': {
             'sslmode': 'require',
         },
