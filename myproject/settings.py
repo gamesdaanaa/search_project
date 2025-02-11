@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-your-secret-key')
 
 
 DEBUG = False
-ALLOWED_HOSTS = ['yourdomain.repl.co']  # あなたのReplitドメインに変更してください
+ALLOWED_HOSTS = ['*']  # 開発中は全てのホストを許可
 
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -26,8 +26,8 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = True
 CSRF_COOKIE_DOMAIN = None
 CSRF_TRUSTED_ORIGINS = [
-    'https://clientside-wrong-mouse-sakabsnacut.replit.app',
-    'https://*.replit.app'
+    'https://*.replit.app',
+    'https://*.repl.co'
 ]
 # Application definition
 INSTALLED_APPS = [
