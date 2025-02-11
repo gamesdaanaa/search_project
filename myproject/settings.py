@@ -107,11 +107,11 @@ finally:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('PGDATABASE', 'neondb'),
-        'USER': os.getenv('PGUSER', 'default'),
-        'PASSWORD': os.getenv('PGPASSWORD', 'your-password'),
-        'HOST': os.getenv('PGHOST', 'ep-cool-wood-123456.us-east-2.aws.neon.tech'),
-        'PORT': os.getenv('PGPORT', '5432'),
+        'NAME': 'gametube',
+        'USER': 'myapp_db_owner',
+        'PASSWORD': 'zGZKSAn4J9Bl',
+        'HOST': 'ep-jolly-waterfall-a1owq4gt-pooler.ap-southeast-1.aws.neon.tech',
+        'PORT': '5432',
         'OPTIONS': {
             'sslmode': 'require',
         },
