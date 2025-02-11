@@ -107,11 +107,15 @@ finally:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neondb',
-        'USER': 'neondb_owner',
-        'PASSWORD': '6xSQLkqd0pre',
-        'HOST': 'ep-polished-truth-a4jofawz.us-east-1.aws.neon.tech',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME', 'neondb'),
+        'USER': os.getenv('DB_USER', 'neondb_owner'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', 'ep-polished-truth-a4jofawz.us-east-1.aws.neon.tech'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+        'OPTIONS': {
+            'sslmode': 'require',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
@@ -141,6 +145,25 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# セッションセキュリティ設定
+SESSION_COOKIE_AGE = 3600  # 1時間でセッション期限切れ
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # ブラウザを閉じたらセッション終了
+SESSION_COOKIE_SECURE = True  # HTTPSのみ
+SESSION_COOKIE_HTTPONLY = True  # JavaScriptからアクセス不可
+
+# セキュリティヘッダー
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# レートリミット設定
+RATELIMIT_ENABLE = True
+RATELIMIT_USE_CACHE = 'default'
+RATELIMIT_FAIL_OPEN = False
 
 # セキュリティヘッダー設定
 SECURE_HSTS_SECONDS = 31536000

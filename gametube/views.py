@@ -5,6 +5,22 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
 from .models import Video, UserProfile, Comment, Subscription, Like
+from django.core.cache import cache
+from django.conf import settings
+from django.contrib.auth.signals import user_login_failed
+from django.dispatch import receiver
+
+MAX_LOGIN_ATTEMPTS = 5
+LOCKOUT_TIME = 900  # 15 minutes (seconds)
+
+@receiver(user_login_failed)
+def handle_login_failed(sender, credentials, request, **kwargs):
+    username = credentials.get('username', '')
+    ip_address = request.META.get('REMOTE_ADDR', '')
+    attempts_key = f'login_attempts_{ip_address}_{username}'
+    attempts = cache.get(attempts_key, 0) + 1
+    cache.set(attempts_key, attempts, LOCKOUT_TIME)
+
 
 @login_required
 def like_video(request, video_id):
@@ -17,38 +33,27 @@ def like_video(request, video_id):
 
     return JsonResponse({'status': 'liked'})
 
-from django.core.cache import cache
-from django.contrib.auth.signals import user_login_failed
-from django.dispatch import receiver
-
-MAX_LOGIN_ATTEMPTS = 5
-LOCKOUT_TIME = 300  # 5分（秒）
-
-@receiver(user_login_failed)
-def handle_login_failed(sender, credentials, **kwargs):
-    username = credentials.get('username', '')
-    attempts_key = f'login_attempts_{username}'
-    attempts = cache.get(attempts_key, 0) + 1
-    cache.set(attempts_key, attempts, LOCKOUT_TIME)
 
 @login_required
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        attempts_key = f'login_attempts_{username}'
-        attempts = cache.get(attempts_key, 0)
-        
-        if attempts >= MAX_LOGIN_ATTEMPTS:
-            messages.error(request, 'アカウントが一時的にロックされています。5分後に再試行してください。')
-            return render(request, 'gametube/login.html')
-            
         password = request.POST.get('password')
+        ip_address = request.META.get('REMOTE_ADDR', '')
+        attempts_key = f'login_attempts_{ip_address}_{username}'
+        attempts = cache.get(attempts_key, 0)
+
+        if attempts >= MAX_LOGIN_ATTEMPTS:
+            messages.error(request, 'アカウントが一時的にロックされています。15分後に再試行してください。')
+            return render(request, 'gametube/login.html')
+
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             cache.delete(attempts_key)
             return redirect('gametube:home')
         else:
+            cache.set(attempts_key, attempts + 1, LOCKOUT_TIME)
             messages.error(request, 'ユーザー名またはパスワードが無効です')
     return render(request, 'gametube/login.html')
 
@@ -117,11 +122,11 @@ def video_detail(request, video_id):
 def user_profile(request, username):
     user = get_object_or_404(User, username=username)
     videos = Video.objects.filter(uploader=user).order_by('-created_at')
-    
+
     is_subscribed = False
     if request.user.is_authenticated:
         is_subscribed = Subscription.objects.filter(subscriber=request.user, channel=user).exists()
-    
+
     context = {
         'profile_user': user,
         'videos': videos,
@@ -137,15 +142,15 @@ def subscribe(request, username):
         subscriber=request.user,
         channel=channel
     )
-    
+
     if not created:
         subscription.delete()
         subscribed = False
     else:
         subscribed = True
-    
+
     subscribers_count = Subscription.objects.filter(channel=channel).count()
-    
+
     return JsonResponse({
         'subscribed': subscribed,
         'subscribers_count': subscribers_count
@@ -237,4 +242,3 @@ def edit_comment(request, comment_id):
             comment.content = content
             comment.save()
     return redirect('gametube:video_detail', video_id=comment.video.id)
-
