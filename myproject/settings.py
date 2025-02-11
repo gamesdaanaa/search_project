@@ -279,6 +279,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
+    ('admin', BASE_DIR / 'static/admin'),
 ]
 
 MEDIA_URL = '/media/'

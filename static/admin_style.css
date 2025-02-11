@@ -1,4 +1,3 @@
-
 /* Django管理サイト用のスタイル */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -80,4 +79,56 @@ button:hover, input[type="submit"]:hover {
     margin-bottom: 20px;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Django管理サイト用のカスタムスタイル */
+#header {
+    background: #417690;
+    color: #fff;
+    padding: 15px;
+}
+
+.module h2, .module caption {
+    background: #79aec8;
+    color: #fff;
+    padding: 8px;
+}
+
+.button, input[type=submit], input[type=button], .submit-row input {
+    background: #417690;
+    color: #fff;
+    padding: 10px 15px;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover {
+    background: #205067;
+}
+
+#content-related .module h2 {
+    background: #417690;
+    color: #fff;
+}
+
+.module {
+    background: #fff;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+
+#changelist table {
+    border: 1px solid #ddd;
+}
+
+#changelist table thead th {
+    background: #417690;
+    color: #fff;
+    padding: 8px;
+}
+
+.login #container {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    max-width: 400px;
+    margin: 100px auto;
 }
