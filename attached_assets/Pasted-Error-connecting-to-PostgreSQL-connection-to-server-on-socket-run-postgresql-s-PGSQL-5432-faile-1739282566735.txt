@@ -4,13 +4,11 @@ Error connecting to PostgreSQL: connection to server on socket "/run/postgresql/
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, gametube, sessions
 Running migrations:
-  Applying gametube.0001_initial... OK
-  Applying gametube.0002_auto_20241226_1135... OK
-  Applying gametube.0002_add_age_field...Traceback (most recent call last):
+  Applying gametube.0001_initial...Traceback (most recent call last):
   File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/backends/utils.py", line 87, in _execute
     return self.cursor.execute(sql)
            ^^^^^^^^^^^^^^^^^^^^^^^^
-psycopg2.errors.DuplicateColumn: column "age" of relation "gametube_userprofile" already exists
+psycopg2.errors.DuplicateTable: relation "gametube_gameboard" already exists
 
 
 The above exception was the direct cause of the following exception:
@@ -46,13 +44,13 @@ Traceback (most recent call last):
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/migrations/migration.py", line 132, in apply
     operation.database_forwards(
-  File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/migrations/operations/fields.py", line 108, in database_forwards
-    schema_editor.add_field(
-  File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/backends/base/schema.py", line 713, in add_field
-    self.execute(sql, params)
-  File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/backends/postgresql/schema.py", line 48, in execute
-    return super().execute(sql, None)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/migrations/operations/models.py", line 96, in database_forwards
+    schema_editor.create_model(model)
+  File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/backends/base/schema.py", line 451, in create_model
+    self.execute(sql, params or None)
+  File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/backends/postgresql/schema.py", line 45, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/backends/base/schema.py", line 201, in execute
     cursor.execute(sql, params)
   File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/backends/utils.py", line 67, in execute
@@ -68,4 +66,4 @@ Traceback (most recent call last):
   File "/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/db/backends/utils.py", line 87, in _execute
     return self.cursor.execute(sql)
            ^^^^^^^^^^^^^^^^^^^^^^^^
-django.db.utils.ProgrammingError: column "age" of relation "gametube_userprofile" already exists
+django.db.utils.ProgrammingError: relation "gametube_gameboard" already exists
