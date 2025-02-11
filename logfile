@@ -1,0 +1,12 @@
+2025-02-11 13:54:45.391 UTC [4804] LOG:  starting PostgreSQL 16.5 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 13.3.0, 64-bit
+2025-02-11 13:54:45.392 UTC [4804] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-02-11 13:54:45.393 UTC [4804] LOG:  could not bind IPv6 address "::1": Cannot assign requested address
+2025-02-11 13:54:45.399 UTC [4804] LOG:  listening on Unix socket "/home/runner/workspace/.postgres/run/.s.PGSQL.5432"
+2025-02-11 13:54:45.423 UTC [4807] LOG:  database system was interrupted; last known up at 2024-12-20 07:29:05 UTC
+2025-02-11 13:54:45.448 UTC [4807] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-02-11 13:54:45.468 UTC [4807] LOG:  redo starts at 0/1530978
+2025-02-11 13:54:45.469 UTC [4807] LOG:  invalid record length at 0/1530A60: expected at least 24, got 0
+2025-02-11 13:54:45.469 UTC [4807] LOG:  redo done at 0/1530A28 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-02-11 13:54:45.482 UTC [4805] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-02-11 13:54:45.519 UTC [4805] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.012 s, total=0.041 s; sync files=2, longest=0.008 s, average=0.006 s; distance=0 kB, estimate=0 kB; lsn=0/1530A60, redo lsn=0/1530A60
+2025-02-11 13:54:45.523 UTC [4804] LOG:  database system is ready to accept connections
