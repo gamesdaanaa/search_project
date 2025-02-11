@@ -159,10 +159,54 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
+# CSP設定の強化
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "'unsafe-eval'")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_IMG_SRC = ("'self'", "data:", "https:")
+CSP_FONT_SRC = ("'self'", "https:", "data:")
+
 # レートリミット設定
 RATELIMIT_ENABLE = True
 RATELIMIT_USE_CACHE = 'default'
 RATELIMIT_FAIL_OPEN = False
+RATELIMIT_VIEW_RATE = '5/m'  # 1分間に5回までのアクセス制限
+RATELIMIT_BLOCK_TIME = 300   # ブロック時間5分
+
+# パスワードの複雑さ要件
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+]
+
+# セッションセキュリティ
+SESSION_COOKIE_AGE = 3600  # 1時間でセッション期限切れ
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# ログイン試行回数制限
+AXES_ENABLED = True
+AXES_FAILURE_LIMIT = 5  # 5回失敗でロック
+AXES_COOLOFF_TIME = 1  # 1時間のロック時間
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 
 # セキュリティヘッダー設定
 SECURE_HSTS_SECONDS = 31536000
