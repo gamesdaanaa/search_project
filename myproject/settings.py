@@ -72,11 +72,11 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # ファイルのトップレベルでインポート
 # データベース接続情報
-DB_HOST = "ep-polished-truth-a4jofawz.us-east-1.aws.neon.tech"
-DB_NAME = "neondb"
-DB_USER = "neondb_owner"
-DB_PASSWORD = "6xSQLkqd0pre"
-DB_PORT = 5432
+DB_HOST = os.getenv('DB_HOST', '')
+DB_NAME = os.getenv('DB_NAME', '')
+DB_USER = os.getenv('DB_USER', '')
+DB_PASSWORD = os.getenv('DB_PASSWORD', '')
+DB_PORT = os.getenv('DB_PORT', 5432)
 
 connection = None  # 初期化
 cursor = None  # cursor を定義
