@@ -17,17 +17,39 @@ def like_video(request, video_id):
 
     return JsonResponse({'status': 'liked'})
 
+from django.core.cache import cache
+from django.contrib.auth.signals import user_login_failed
+from django.dispatch import receiver
+
+MAX_LOGIN_ATTEMPTS = 5
+LOCKOUT_TIME = 300  # 5分（秒）
+
+@receiver(user_login_failed)
+def handle_login_failed(sender, credentials, **kwargs):
+    username = credentials.get('username', '')
+    attempts_key = f'login_attempts_{username}'
+    attempts = cache.get(attempts_key, 0) + 1
+    cache.set(attempts_key, attempts, LOCKOUT_TIME)
+
 @login_required
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
+        attempts_key = f'login_attempts_{username}'
+        attempts = cache.get(attempts_key, 0)
+        
+        if attempts >= MAX_LOGIN_ATTEMPTS:
+            messages.error(request, 'アカウントが一時的にロックされています。5分後に再試行してください。')
+            return render(request, 'gametube/login.html')
+            
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            cache.delete(attempts_key)
             return redirect('gametube:home')
         else:
-            messages.error(request, 'Invalid username or password')
+            messages.error(request, 'ユーザー名またはパスワードが無効です')
     return render(request, 'gametube/login.html')
 
 def logout_view(request):
