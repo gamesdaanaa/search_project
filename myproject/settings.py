@@ -275,7 +275,6 @@ STATICFILES_DIRS = [
 ADMIN_SITE_HEADER = "GameTube 管理サイト"
 ADMIN_SITE_TITLE = "GameTube Admin"
 ADMIN_INDEX_TITLE = "サイト管理"
-]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
