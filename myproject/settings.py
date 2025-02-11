@@ -106,11 +106,11 @@ try:
 except Exception as e:
     print(f"Error connecting to PostgreSQL: {e}")
 finally:
-if cursor:
-    cursor.close()
-if connection:
-    connection.close()
-    print("Database connection closed.")
+    if cursor:
+        cursor.close()
+    if connection:
+        connection.close()
+        print("Database connection closed.")
 
 # Django 用 DATABASES 設定
 DATABASES = {
