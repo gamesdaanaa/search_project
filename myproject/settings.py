@@ -107,13 +107,22 @@ finally:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neondb',
-        'USER': 'neondb_owner',
-        'PASSWORD': '6xSQLkqd0pre',
-        'HOST': 'ep-polished-truth-a4jofawz.us-east-1.aws.neon.tech',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME', 'neondb'),
+        'USER': os.getenv('DB_USER', 'neondb_owner'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
+
+# Security Headers
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'")
+CSP_IMG_SRC = ("'self'", "data:", "https:")
+CSP_FONT_SRC = ("'self'", "https:", "data:")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
