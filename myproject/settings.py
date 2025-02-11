@@ -134,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 8,
+            'min_length': 10,
         }
     },
     {
@@ -142,6 +142,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    {
+        'NAME': 'gametube.validators.SymbolValidator',
+    },
+    {
+        'NAME': 'gametube.validators.UpperLowerValidator',
     },
 ]
 
@@ -170,8 +176,10 @@ CSP_FONT_SRC = ("'self'", "https:", "data:")
 RATELIMIT_ENABLE = True
 RATELIMIT_USE_CACHE = 'default'
 RATELIMIT_FAIL_OPEN = False
-RATELIMIT_VIEW_RATE = '5/m'  # 1分間に5回までのアクセス制限
-RATELIMIT_BLOCK_TIME = 300   # ブロック時間5分
+RATELIMIT_VIEW_RATE = '30/m'  # 1分間に30回までのアクセス制限
+RATELIMIT_LOGIN_RATE = '5/m'  # ログイン試行は1分間に5回まで
+RATELIMIT_BLOCK_TIME = 900    # ブロック時間15分
+RATELIMIT_API_RATE = '100/m'  # API制限は1分間に100回まで
 
 # パスワードの複雑さ要件
 AUTH_PASSWORD_VALIDATORS = [
@@ -219,6 +227,43 @@ LANGUAGE_CODE = 'ja'
 TIME_ZONE = 'Asia/Tokyo'
 USE_I18N = True
 USE_TZ = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
+        },
+        'security': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'security.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django.security': {
+            'handlers': ['security'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'gametube.security': {
+            'handlers': ['security'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
