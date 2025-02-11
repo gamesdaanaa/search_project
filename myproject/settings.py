@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-your-secret-key')
 
 
 DEBUG = False
-ALLOWED_HOSTS = ['*']  # 開発中は全てのホストを許可
+ALLOWED_HOSTS = ['*', '.repl.co', '.replit.dev', '.replit.app']
 
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
