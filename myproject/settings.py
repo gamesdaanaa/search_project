@@ -114,7 +114,6 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT', '5432'),
         'OPTIONS': {
             'sslmode': 'require',
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     }
 }
