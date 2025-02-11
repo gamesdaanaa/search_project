@@ -70,16 +70,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
-# ファイルのトップレベルでインポート
-# データベース接続情報
-DB_HOST = os.getenv('DB_HOST', '')
-DB_NAME = os.getenv('DB_NAME', '')
-DB_USER = os.getenv('DB_USER', '')
-DB_PASSWORD = os.getenv('DB_PASSWORD', '')
-DB_PORT = os.getenv('DB_PORT', 5432)
+# データベース接続情報（環境変数から取得）
+DB_HOST = os.getenv('DB_HOST')
+DB_NAME = os.getenv('DB_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_PORT = os.getenv('DB_PORT', '5432')  # 文字列として取得
 
-connection = None  # 初期化
-cursor = None  # cursor を定義
+# 必須の環境変数が設定されているか確認
+if not all([DB_HOST, DB_NAME, DB_USER, DB_PASSWORD]):
+    raise ValueError("必要なデータベース環境変数が設定されていません。")
+
+# PostgreSQL接続の確認
+connection = None
+cursor = None
 
 try:
     # データベースに接続
@@ -88,34 +92,39 @@ try:
         database=DB_NAME,
         user=DB_USER,
         password=DB_PASSWORD,
-        port=DB_PORT
+        port=int(DB_PORT),  # 整数に変換
+        sslmode="require"
     )
     cursor = connection.cursor()
+
+    # バージョン情報の取得
     cursor.execute("SELECT version();")
     db_version = cursor.fetchone()
+
+    
     print(f"Connected to PostgreSQL database. Version: {db_version[0]}") if db_version else "Connected to PostgreSQL database. Version information not available."
 except Exception as e:
     print(f"Error connecting to PostgreSQL: {e}")
 finally:
-    if connection:
-        # Cursor が存在する場合にのみクローズ
-        if cursor:
-            cursor.close()
-        connection.close()
-        print("Database connection closed.")
-# Database
+if cursor:
+    cursor.close()
+if connection:
+    connection.close()
+    print("Database connection closed.")
+
+# Django 用 DATABASES 設定
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': DB_HOST,
-        'PORT': DB_PORT,
-        'OPTIONS': {
-            'sslmode': 'require',
-        },
-    }
+'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': DB_NAME,
+    'USER': DB_USER,
+    'PASSWORD': DB_PASSWORD,
+    'HOST': DB_HOST,
+    'PORT': int(DB_PORT),  # Djangoでも整数に変換
+    'OPTIONS': {
+        'sslmode': 'require',
+    },
+}
 }
 
 # Security Headers
