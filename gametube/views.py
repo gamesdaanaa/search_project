@@ -1,6 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
+from django.core.cache import cache
+from django.http import HttpResponseForbidden
+from functools import wraps
+import time
+
+def rate_limit(key_prefix, limit=5, period=60):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            key = f"{key_prefix}:{request.user.id}"
+            count = cache.get(key, 0)
+            
+            if count >= limit:
+                return HttpResponseForbidden('レートリミットを超えました。しばらく待ってから再試行してください。')
+            
+            cache.set(key, count + 1, period)
+            return view_func(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
 from django.contrib.auth.models import User
 from .models import Video, UserProfile, Comment, Subscription, Like
 from django.core.cache import cache
@@ -83,6 +102,24 @@ def upload_video(request):
         thumbnail = request.FILES.get('thumbnail')
         category = request.POST.get('category')
         age_restriction = request.POST.get('age_restriction')
+
+        # ファイル形式チェック
+        allowed_video_types = ['video/mp4', 'video/webm', 'video/ogg']
+        allowed_image_types = ['image/jpeg', 'image/png', 'image/gif']
+        max_file_size = 500 * 1024 * 1024  # 500MB
+
+        if video_file:
+            if video_file.content_type not in allowed_video_types:
+                messages.error(request, '許可されていない動画形式です')
+                return redirect('gametube:upload')
+            if video_file.size > max_file_size:
+                messages.error(request, 'ファイルサイズが大きすぎます')
+                return redirect('gametube:upload')
+
+        if thumbnail:
+            if thumbnail.content_type not in allowed_image_types:
+                messages.error(request, '許可されていない画像形式です')
+                return redirect('gametube:upload')
 
         if title and video_file and thumbnail:
             video = Video.objects.create(
@@ -199,12 +236,16 @@ def watch_history(request):
     history = WatchHistory.objects.filter(user=request.user).order_by('-watched_at')
     return render(request, 'gametube/watch_history.html', {'history': history})
 
+from django.utils.html import escape
+
 @login_required
 def reply_comment(request, comment_id):
     if request.method == 'POST':
         parent_comment = get_object_or_404(Comment, id=comment_id)
         content = request.POST.get('content')
         if content:
+            # XSS対策としてHTMLエスケープ
+            content = escape(content)
             Comment.objects.create(
                 video=parent_comment.video,
                 user=request.user,
