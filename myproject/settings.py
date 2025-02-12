@@ -32,8 +32,15 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.dev',
     'https://*.pike.replit.dev',
     'https://*.repl.dev',
-    'https://*.replit.dev:3001'
+    'https://*.pike.replit.dev:3001'
 ]
+
+# CSRFの基本設定
+CSRF_COOKIE_SECURE = False
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_DOMAIN = None
 
 # CSRFの設定
 CSRF_COOKIE_SECURE = False  # 開発環境用
