@@ -8,5 +8,5 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
     if len(sys.argv) == 1:
         sys.argv.append('runserver')
-        sys.argv.append('0.0.0.0:3000')  # ポートを3000に変更
+        sys.argv.append('0.0.0.0:3000')
     execute_from_command_line(sys.argv)
