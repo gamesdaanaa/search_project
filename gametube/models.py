@@ -72,6 +72,12 @@ class UserProfile(models.Model):
     bio = models.TextField(max_length=500, blank=True)
     age = models.IntegerField(null=False, default=13)
 
+class TwoFactorProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    secret_key = models.CharField(max_length=32, blank=True)
+    is_verified = models.BooleanField(default=False)
+    backup_codes = models.JSONField(default=list)
+
     def __str__(self):
         return self.user.username
 

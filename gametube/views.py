@@ -52,10 +52,40 @@ def like_video(request, video_id):
     return JsonResponse({'status': 'liked'})
 
 
+import jwt
+from django.conf import settings
+from django_otp import devices_for_user
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from captcha.fields import ReCaptchaField
+from django.core.exceptions import ValidationError
+
+def generate_jwt_token(user):
+    payload = {
+        'user_id': user.id,
+        'exp': datetime.datetime.utcnow() + settings.JWT_EXPIRATION_DELTA
+    }
+    return jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+
+def verify_2fa(user, otp_code):
+    devices = devices_for_user(user)
+    for device in devices:
+        if device.verify_token(otp_code):
+            return True
+    return False
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        otp_code = request.POST.get('otp_code')
+        
+        # reCAPTCHA検証
+        captcha = ReCaptchaField()
+        try:
+            captcha.clean(request.POST.get('g-recaptcha-response'))
+        except ValidationError:
+            messages.error(request, 'reCAPTCHA認証に失敗しました')
+            return render(request, 'gametube/login.html')
         ip_address = request.META.get('REMOTE_ADDR', '')
         attempts_key = f'login_attempts_{ip_address}_{username}'
         attempts = cache.get(attempts_key, 0)

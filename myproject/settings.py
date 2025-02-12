@@ -60,10 +60,26 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'captcha',
     'gametube',
 ]
 
+# reCAPTCHA settings
+RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY', 'your-public-key')
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY', 'your-private-key')
+
+# JWT settings
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
+JWT_ALGORITHM = 'HS256'
+JWT_EXPIRATION_DELTA = datetime.timedelta(days=1)
+
+# 2FA settings
+OTP_TOTP_ISSUER = 'GameTube'
+
 MIDDLEWARE = [
+    'gametube.middleware.WAFMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'gametube.middleware.SecurityMonitoringMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -304,7 +320,16 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-MEDIA_URL = '/media/'
+# AWS S3設定
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'ap-northeast-1')
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 if not DEBUG:
