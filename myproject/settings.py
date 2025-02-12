@@ -34,8 +34,15 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.dev:*',
     'https://*.pike.replit.dev:*',
     'https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev',
-    'https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev:3001'
+    'https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev:3000',
+    'https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev:*'
 ]
+
+# CSRF設定の最適化
+CSRF_COOKIE_SECURE = False  # Development setting
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = None
 
 # セキュリティ設定の最適化
 CSRF_COOKIE_SECURE = False  # Development setting
