@@ -31,8 +31,15 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.repl.co',
     'https://*.replit.dev',
     'https://*.pike.replit.dev',
-    'https://*.repl.dev'
+    'https://*.repl.dev',
+    'https://*.replit.dev:3001'
 ]
+
+# CSRFの設定
+CSRF_COOKIE_SECURE = False  # 開発環境用
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Application definition
 INSTALLED_APPS = [
