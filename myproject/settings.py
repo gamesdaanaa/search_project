@@ -26,53 +26,24 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_DOMAIN = None
+
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.replit.app',
-    'https://*.repl.co',
     'https://*.replit.dev',
     'https://*.pike.replit.dev',
     'https://*.repl.dev',
+    'https://*.replit.dev:*',
+    'https://*.pike.replit.dev:*',
     'https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev',
     'https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev:3001'
 ]
 
-# CSRF基本設定
-CSRF_COOKIE_SECURE = False
-CSRF_USE_SESSIONS = False
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_DOMAIN = None
-CSRF_TRUSTED_ORIGINS_ONLY = False
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_DOMAIN = None
-
-# CSRF Settings
+# セキュリティ設定の最適化
 CSRF_COOKIE_SECURE = False  # Development setting
 CSRF_USE_SESSIONS = True
 CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_DOMAIN = None
+CSRF_COOKIE_SAMESITE = None
+CSRF_TRUSTED_ORIGINS_ONLY = False
 
-# CSRF settings
-CSRF_COOKIE_SECURE = False
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
-
-# CSRFの基本設定
-CSRF_COOKIE_SECURE = False
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_DOMAIN = None
-
-# CSRFの設定
-CSRF_COOKIE_SECURE = False  # 開発環境用
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Application definition
 INSTALLED_APPS = [
@@ -95,15 +66,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CSRF設定
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_SECURE = False
-CSRF_COOKIE_HTTPONLY = False
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.replit.dev',
-    'https://*.replit.app',
-    'https://*.repl.co'
-]
 
 ROOT_URLCONF = 'myproject.urls'
 
@@ -157,7 +119,7 @@ try:
     cursor.execute("SELECT version();")
     db_version = cursor.fetchone()
 
-    
+
     print(f"Connected to PostgreSQL database. Version: {db_version[0]}") if db_version else "Connected to PostgreSQL database. Version information not available."
 except Exception as e:
     print(f"Error connecting to PostgreSQL: {e}")
