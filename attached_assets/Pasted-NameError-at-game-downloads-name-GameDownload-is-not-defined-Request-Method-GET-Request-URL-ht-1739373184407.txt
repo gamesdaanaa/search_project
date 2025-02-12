@@ -1,0 +1,34 @@
+NameError at /game-downloads/
+name 'GameDownload' is not defined
+Request Method:	GET
+Request URL:	https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev/game-downloads/
+Django Version:	4.2.12
+Exception Type:	NameError
+Exception Value:	
+name 'GameDownload' is not defined
+Exception Location:	/home/runner/workspace/gametube/views.py, line 166, in game_downloads
+Raised during:	gametube.views.game_downloads
+Python Executable:	/home/runner/workspace/.pythonlibs/bin/python
+Python Version:	3.11.10
+Python Path:	
+['/home/runner/workspace',
+ '/nix/store/lc7qv2ldzrs1aq3hbyzmbgvn0h2w26pl-sitecustomize/lib/python/site-packages',
+ '/nix/store/dfg63lldbvcj207iyr9z0xw21d8ax02n-python3.11-pip-24.0/lib/python3.11/site-packages',
+ '/nix/store/7hnr99nxrd2aw6lghybqdmkckq60j6l9-python3-3.11.9/lib/python3.11/site-packages',
+ '/nix/store/xhldz66b9bl8hwyhamx46wyyaklqr235-python3.11-pip-24.0/lib/python3.11/site-packages',
+ '/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages',
+ '/nix/store/qkcv2ihmicsk82jfsmszkxw9sg0im9f9-python3.11-asgiref-3.7.2/lib/python3.11/site-packages',
+ '/nix/store/k920s30a5dqzndfj4ic23p7rs0pc927k-python3.11-typing-extensions-4.11.0/lib/python3.11/site-packages',
+ '/nix/store/96qs49dw25n502z08sc7l8vzvh19lay1-python3.11-sqlparse-0.5.0/lib/python3.11/site-packages',
+ '/nix/store/ddadgv5z9rpdin70dcpdk2yflyv7hvxl-python3.11-psycopg2-2.9.9/lib/python3.11/site-packages',
+ '/nix/store/bnkg9gk85zn8q37phhiiacrr407lqp7k-python3.11-pillow-10.3.0/lib/python3.11/site-packages',
+ '/nix/store/760x7xf14jjvgmhzjb48g0y09k3iy5xf-python3.11-olefile-0.47/lib/python3.11/site-packages',
+ '/nix/store/a46b5cds6hhb8dycyf2s4bf4mcmgwcci-python3.11-defusedxml-0.7.1/lib/python3.11/site-packages',
+ '/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python311.zip',
+ '/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11',
+ '/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/lib-dynload',
+ '/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages',
+ '/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/site-packages',
+ '/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages',
+ '/nix/store/wblvmd5y7izx0z10d1w7ga7zc4apjxmb-python3.11-setuptools-75.1.1/lib/python3.11/site-packages']
+Server time:	Thu, 13 Feb 2025 00:12:58 +0900
