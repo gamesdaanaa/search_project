@@ -1,0 +1,81 @@
+NoReverseMatch at /
+Reverse for 'logout' not found. 'logout' is not a valid view function or pattern name.
+Request Method:	GET
+Request URL:	https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev/?initialPath=%2F&id=%3Ar8fv%3A
+Django Version:	4.2.12
+Exception Type:	NoReverseMatch
+Exception Value:	
+Reverse for 'logout' not found. 'logout' is not a valid view function or pattern name.
+Exception Location:	/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/urls/resolvers.py, line 828, in _reverse_with_prefix
+Raised during:	gametube.views.home
+Python Executable:	/home/runner/workspace/.pythonlibs/bin/python
+Python Version:	3.11.10
+Python Path:	
+['/home/runner/workspace',
+ '/nix/store/lc7qv2ldzrs1aq3hbyzmbgvn0h2w26pl-sitecustomize/lib/python/site-packages',
+ '/nix/store/dfg63lldbvcj207iyr9z0xw21d8ax02n-python3.11-pip-24.0/lib/python3.11/site-packages',
+ '/nix/store/7hnr99nxrd2aw6lghybqdmkckq60j6l9-python3-3.11.9/lib/python3.11/site-packages',
+ '/nix/store/xhldz66b9bl8hwyhamx46wyyaklqr235-python3.11-pip-24.0/lib/python3.11/site-packages',
+ '/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages',
+ '/nix/store/qkcv2ihmicsk82jfsmszkxw9sg0im9f9-python3.11-asgiref-3.7.2/lib/python3.11/site-packages',
+ '/nix/store/k920s30a5dqzndfj4ic23p7rs0pc927k-python3.11-typing-extensions-4.11.0/lib/python3.11/site-packages',
+ '/nix/store/96qs49dw25n502z08sc7l8vzvh19lay1-python3.11-sqlparse-0.5.0/lib/python3.11/site-packages',
+ '/nix/store/ddadgv5z9rpdin70dcpdk2yflyv7hvxl-python3.11-psycopg2-2.9.9/lib/python3.11/site-packages',
+ '/nix/store/bnkg9gk85zn8q37phhiiacrr407lqp7k-python3.11-pillow-10.3.0/lib/python3.11/site-packages',
+ '/nix/store/760x7xf14jjvgmhzjb48g0y09k3iy5xf-python3.11-olefile-0.47/lib/python3.11/site-packages',
+ '/nix/store/a46b5cds6hhb8dycyf2s4bf4mcmgwcci-python3.11-defusedxml-0.7.1/lib/python3.11/site-packages',
+ '/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python311.zip',
+ '/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11',
+ '/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/lib-dynload',
+ '/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages',
+ '/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/site-packages',
+ '/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages',
+ '/nix/store/wblvmd5y7izx0z10d1w7ga7zc4apjxmb-python3.11-setuptools-75.1.1/lib/python3.11/site-packages']
+Server time:	Thu, 13 Feb 2025 00:08:30 +0900
+Error during template rendering
+In template /home/runner/workspace/gametube/templates/gametube/base.html, error at line 142
+
+Reverse for 'logout' not found. 'logout' is not a valid view function or pattern name.
+132	                        <div class="default-avatar">{{ user.username|make_list|first|upper }}</div>
+133	                    {% endif %}
+134	                    <div class="user-menu-content">
+135	                        <a href="{% url 'gametube:user_profile' user.username %}">プロフィール</a>
+136	                        <a href="{% url 'gametube:liked_videos' %}">高評価動画</a>
+137	                        <a href="{% url 'gametube:watch_history' %}">視聴履歴</a>
+138	                        <a href="{% url 'gametube:subscriptions' %}">チャンネル登録</a>
+139	                        <a href="{% url 'gametube:game_downloads' %}">ゲームダウンロード</a>
+140	                        <a href="{% url 'gametube:device_purchases' %}">デバイス購入</a>
+141	                        <a href="{% url 'gametube:game_boards' %}">掲示板一覧</a>
+142	                        <a href="{% url 'logout' %}">ログアウト</a>
+143	                    </div>
+144	                </div>
+145	            {% else %}
+146	                <a href="{% url 'gametube:login' %}">ログイン</a>
+147	                <a href="{% url 'gametube:register' %}">新規登録</a>
+148	            {% endif %}
+149	        </div>
+150	    </nav>
+151	    {% block content %}{% endblock %}
+152	</body>
+Traceback Switch to copy-and-paste view
+/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/core/handlers/exception.py, line 55, in inner
+                response = get_response(request)
+                               ^^^^^^^^^^^^^^^^^^^^^ …
+Local vars
+/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/core/handlers/base.py, line 197, in _get_response
+                response = wrapped_callback(request, *callback_args, **callback_kwargs)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ …
+Local vars
+/home/runner/workspace/gametube/views.py, line 104, in home
+    return render(request, 'gametube/home.html', {'videos': videos})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ …
+Local vars
+/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/shortcuts.py, line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ …
+Local vars
+/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packages/django/template/loader.py, line 62, in render_to_string
+    return template.render(context, request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ …
+Local vars
+/nix/store/6dhxaza18jl6d29yczsqp0nf7lr07avj-python3.11-django-4.2.12/lib/python3.11/site-packa
