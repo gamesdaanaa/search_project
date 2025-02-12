@@ -36,3 +36,4 @@ django-recaptcha
 django-recaptcha
 django-recaptcha
 PyJWT
+django-recaptcha
