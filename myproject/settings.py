@@ -66,7 +66,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
+CORS_ALLOWED_ORIGINS = ['https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev',]
 ROOT_URLCONF = 'myproject.urls'
 
 TEMPLATES = [
@@ -307,3 +307,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+

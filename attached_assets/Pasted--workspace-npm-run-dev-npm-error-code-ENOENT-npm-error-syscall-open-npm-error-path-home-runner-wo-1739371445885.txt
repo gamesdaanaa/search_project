@@ -1,0 +1,72 @@
+~/workspace$ npm run dev
+npm error code ENOENT
+npm error syscall open
+npm error path /home/runner/workspace/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/home/runner/workspace/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-02-12T14_42_28_549Z-debug-0.log
+~/workspace$ npm run dev
+npm error code ENOENT
+npm error syscall open
+npm error path /home/runner/workspace/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/home/runner/workspace/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-02-12T14_42_31_240Z-debug-0.log
+~/workspace$ ls -l
+total 448
+drwxr-xr-x 1 runner runner   2414 Feb 12 14:29 attached_assets
+-rw-r--r-- 1 runner runner   3964 Dec 21 07:47 check_tables.py
+-rw-r--r-- 1 runner runner    262 Dec 21 08:17 check_users.py
+-rw-r--r-- 1 runner runner   3654 Dec 18 16:25 database.sql
+-rw-r--r-- 1 runner runner 274432 Dec 21 00:35 db.sqlite3
+-rw-r--r-- 1 runner runner      0 Feb 11 13:03 debug.log
+drwxr-xr-x 1 runner runner    150 Feb 12 14:29 gametube
+-rw-r--r-- 1 runner runner   9927 Feb 11 15:04 generated-icon.png
+-rw------- 1 runner runner   4060 Feb 11 13:58 logfile
+-rw-r--r-- 1 runner runner    372 Feb 12 14:36 main.py
+-rwxr-xr-x 1 runner runner    665 Dec 15 10:08 manage.py
+drwxr-xr-x 1 runner runner    132 Jan 25 03:28 media
+drwxr-xr-x 1 runner runner    108 Feb 12 14:41 myproject
+-rw-r--r-- 1 runner runner  99297 Dec 18 07:56 os
+-rw-r--r-- 1 runner runner    175 Dec 22 11:31 pyproject.toml
+-rw-r--r-- 1 runner runner    124 Jan 10 16:28 README.md
+-rw-r--r-- 1 runner runner    243 Dec 22 11:31 replit.nix
+-rw-r--r-- 1 runner runner    196 Feb 11 12:21 requirements.txt
+-rw-r--r-- 1 runner runner  14851 Feb 12 14:18 security.log
+drwxr-xr-x 1 runner runner     48 Feb 11 15:12 static
+drwxr-xr-x 1 runner runner     58 Feb 11 15:20 staticfiles
+-rw-r--r-- 1 runner runner   2829 Dec 15 13:50 uv.lock
+~/workspace$ npm init -y
+Wrote to /home/runner/workspace/package.json:
+
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "I tried to create a YouTube-like site dedicated to games.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
+
+
+~/workspace$ npm install
+
+up to date, audited 1 package in 502ms
+
+found 0 vulnerabilities
+~/workspace$ npm run dev
+npm error Missing script: "dev"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-02-12T14_43_10_890Z-debug-0.log
+~/workspace$ 

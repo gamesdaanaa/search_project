@@ -8,5 +8,5 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
     if len(sys.argv) == 1:
         sys.argv.append('runserver')
-        sys.argv.append('0.0.0.0:80')
+        sys.argv.append('0.0.0.0:8080')
     execute_from_command_line(sys.argv)
