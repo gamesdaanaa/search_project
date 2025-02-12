@@ -35,3 +35,4 @@ django-storages
 django-recaptcha
 django-recaptcha
 django-recaptcha
+PyJWT
