@@ -41,7 +41,7 @@
 <body>
     <div class="login-container">
         <h2>ログイン</h2>
-        <form method="POST">
+        <form method="POST" action="{% url 'gametube:login' %}">
             {% csrf_token %}
             {% csrf_token %}
             <div class="form-group">
