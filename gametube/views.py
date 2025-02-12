@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
-from django.contrib import messages
-from django.http import JsonResponse
 from .models import Video, UserProfile, Comment, Subscription, Like
 from django.core.cache import cache
 from django.conf import settings
 from django.contrib.auth.signals import user_login_failed
 from django.dispatch import receiver
+from .models import Video, GameBoard, GameDownload, DevicePurchase, WatchHistory
 
 MAX_LOGIN_ATTEMPTS = 5
 LOCKOUT_TIME = 900  # 15 minutes (seconds)
