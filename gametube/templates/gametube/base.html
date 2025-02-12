@@ -1,9 +1,7 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>GameTube</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         :root {
             --bg-color: #f9f9f9;
@@ -64,90 +62,38 @@
             background: #ff0000;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 20px;
             border-radius: 20px;
             cursor: pointer;
         }
-        .user-menu {
-            position: relative;
-            display: inline-block;
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .user-menu-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: white;
-            min-width: 160px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border-radius: 4px;
-            z-index: 1;
-        }
-        .user-menu:hover .user-menu-content {
-            display: block;
-        }
-        .user-menu-content a {
-            color: var(--text-color);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .user-menu-content a:hover {
-            background-color: #f5f5f5;
-        }
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        .default-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #ff0000;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        {% block extra_style %}{% endblock %}
     </style>
 </head>
 <body>
     <nav class="navbar">
         <a href="{% url 'gametube:home' %}" class="logo">GameTube</a>
-        <form method="get" action="{% url 'gametube:home' %}" class="search-form">
-            <input type="text" name="search" placeholder="検索..." value="{{ request.GET.search }}">
+        <form class="search-form" action="{% url 'gametube:home' %}" method="get">
+            <input type="text" name="search" placeholder="検索...">
             <button type="submit">検索</button>
         </form>
         <div class="nav-links">
             {% if user.is_authenticated %}
                 <a href="{% url 'gametube:upload' %}">アップロード</a>
-                <div class="user-menu">
-                    {% if user.userprofile.avatar %}
-                        <img src="{{ user.userprofile.avatar.url }}" alt="{{ user.username }}" class="user-avatar">
-                    {% else %}
-                        <div class="default-avatar">{{ user.username|make_list|first|upper }}</div>
-                    {% endif %}
-                    <div class="user-menu-content">
-                        <a href="{% url 'gametube:user_profile' user.username %}">プロフィール</a>
-                        <a href="{% url 'gametube:liked_videos' %}">高評価動画</a>
-                        <a href="{% url 'gametube:watch_history' %}">視聴履歴</a>
-                        <a href="{% url 'gametube:subscriptions' %}">チャンネル登録</a>
-                        <a href="{% url 'gametube:game_downloads' %}">ゲームダウンロード</a>
-                        <a href="{% url 'gametube:device_purchases' %}">デバイス購入</a>
-                        <a href="{% url 'gametube:game_boards' %}">掲示板一覧</a>
-                        <a href="{% url 'logout' %}">ログアウト</a>
-                    </div>
-                </div>
+                <a href="{% url 'gametube:user_profile' %}">プロフィール</a>
+                <a href="{% url 'logout' %}">ログアウト</a>
             {% else %}
                 <a href="{% url 'gametube:login' %}">ログイン</a>
                 <a href="{% url 'gametube:register' %}">新規登録</a>
             {% endif %}
         </div>
     </nav>
-    {% block content %}{% endblock %}
+    <div class="main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>
