@@ -43,7 +43,6 @@
         <h2>ログイン</h2>
         <form method="POST" action="{% url 'gametube:login' %}">
             {% csrf_token %}
-            {% csrf_token %}
             <div class="form-group">
                 <input type="text" name="username" placeholder="ユーザー名">
             </div>

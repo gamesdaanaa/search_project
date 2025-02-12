@@ -21,13 +21,14 @@ SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_USE_SESSIONS = True
+CSRF_USE_SESSIONS = False
 CSRF_COOKIE_DOMAIN = None
 CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.app',
-    'https://*.repl.co'
+    'https://*.repl.co',
+    'https://*.replit.dev'
 ]
 
 # Application definition
