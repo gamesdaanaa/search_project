@@ -30,7 +30,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.app',
     'https://*.repl.co',
     'https://*.replit.dev',
-    'https://*.pike.replit.dev'
+    'https://*.pike.replit.dev',
+    'https://*.repl.dev'
 ]
 
 # Application definition
