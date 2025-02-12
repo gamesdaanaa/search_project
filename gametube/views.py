@@ -34,7 +34,6 @@ def like_video(request, video_id):
     return JsonResponse({'status': 'liked'})
 
 
-@login_required
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
