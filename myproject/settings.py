@@ -32,15 +32,17 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.dev',
     'https://*.pike.replit.dev',
     'https://*.repl.dev',
-    'https://*.replit.dev:3001',
-    'https://*.repl.co:3001',
-    'https://*.pike.replit.dev:3001',
     'https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev',
     'https://fb106892-b31d-407e-b484-e318f22fe67f-00-2wtm6tsyubq8a.pike.replit.dev:3001'
 ]
 
 # CSRF基本設定
 CSRF_COOKIE_SECURE = False
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = None
+CSRF_COOKIE_DOMAIN = None
+CSRF_TRUSTED_ORIGINS_ONLY = False
 CSRF_USE_SESSIONS = True
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
