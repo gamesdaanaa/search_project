@@ -15,4 +15,7 @@ urlpatterns = [
     path('subscribe/<str:username>/', views.subscribe, name='subscribe'),
     path('subscriptions/', views.subscriptions, name='subscriptions'),
     path('watch-history/', views.watch_history, name='watch_history'),
+    path('game-downloads/', views.game_downloads, name='game_downloads'),
+    path('device-purchases/', views.device_purchases, name='device_purchases'),
+    path('game-boards/', views.game_boards, name='game_boards'),
 ]
