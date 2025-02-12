@@ -24,11 +24,13 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_DOMAIN = None
 CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.app',
     'https://*.repl.co',
-    'https://*.replit.dev'
+    'https://*.replit.dev',
+    'https://*.pike.replit.dev'
 ]
 
 # Application definition
