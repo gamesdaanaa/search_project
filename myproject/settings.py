@@ -75,14 +75,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # データベース接続情報（環境変数から取得）
-DB_HOST = os.getenv('DB_HOST')
-DB_NAME = os.getenv('DB_NAME')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_PORT = os.getenv('DB_PORT', '5432')  # 文字列として取得
+DB_HOST = os.getenv('PGHOST')
+DB_NAME = os.getenv('PGDATABASE')
+DB_USER = os.getenv('PGUSER')
+DB_PASSWORD = os.getenv('PGPASSWORD')
+DB_PORT = os.getenv('PGPORT', '5432')  # 文字列として取得
 
 # 必須の環境変数が設定されているか確認
 if not all([DB_HOST, DB_NAME, DB_USER, DB_PASSWORD]):
+    print(f"Missing environment variables: HOST={DB_HOST}, NAME={DB_NAME}, USER={DB_USER}")
     raise ValueError("必要なデータベース環境変数が設定されていません。")
 
 # PostgreSQL接続の確認
