@@ -75,3 +75,41 @@ class WAFMiddleware:
                     self.logger.warning(f'Detected {check_type} attack attempt')
                     return True
         return False
+from django.http import HttpResponseForbidden
+from django.core.cache import cache
+import ipaddress
+
+class IPRestrictionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self.allowed_ips = [
+            '10.0.0.0/8',
+            '172.16.0.0/12',
+            '192.168.0.0/16'
+        ]
+        
+    def is_allowed_ip(self, ip):
+        return any(ipaddress.ip_address(ip) in ipaddress.ip_network(allowed)
+                  for allowed in self.allowed_ips)
+
+    def __call__(self, request):
+        if request.path.startswith('/management-console-secret/'):
+            ip = request.META.get('REMOTE_ADDR')
+            if not self.is_allowed_ip(ip):
+                return HttpResponseForbidden('アクセスが制限されています')
+        return self.get_response(request)
+
+class IntrusionDetectionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        
+    def __call__(self, request):
+        ip = request.META.get('REMOTE_ADDR')
+        key = f'request_count_{ip}'
+        count = cache.get(key, 0)
+        
+        if count > 100:  # 1分間に100回以上のリクエスト
+            return HttpResponseForbidden('不正なアクセスを検出しました')
+            
+        cache.set(key, count + 1, 60)  # 60秒でリセット
+        return self.get_response(request)

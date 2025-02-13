@@ -123,6 +123,30 @@ def register_view(request):
         return redirect('gametube:home')
     return render(request, 'gametube/register.html')
 
+import magic
+import hashlib
+from django.core.exceptions import ValidationError
+
+def validate_file_size(file):
+    max_size = 500 * 1024 * 1024  # 500MB
+    if file.size > max_size:
+        raise ValidationError('ファイルサイズは500MB以下にしてください。')
+
+def validate_file_type(file):
+    mime = magic.Magic()
+    file_type = mime.from_buffer(file.read(1024))
+    file.seek(0)
+    
+    allowed_types = {
+        'video': ['video/mp4', 'video/webm'],
+        'image': ['image/jpeg', 'image/png']
+    }
+    
+    if 'video' in file_type.lower() and file.content_type not in allowed_types['video']:
+        raise ValidationError('無効な動画形式です。')
+    elif 'image' in file_type.lower() and file.content_type not in allowed_types['image']:
+        raise ValidationError('無効な画像形式です。')
+
 @login_required
 def upload_video(request):
     if request.method == 'POST':
@@ -130,6 +154,14 @@ def upload_video(request):
         description = request.POST.get('description')
         video_file = request.FILES.get('video')
         thumbnail = request.FILES.get('thumbnail')
+        
+        try:
+            if video_file:
+                validate_file_size(video_file)
+                validate_file_type(video_file)
+            if thumbnail:
+                validate_file_size(thumbnail)
+                validate_file_type(thumbnail)
         category = request.POST.get('category')
         age_restriction = request.POST.get('age_restriction')
 
@@ -268,11 +300,35 @@ def watch_history(request):
 
 from django.utils.html import escape
 
+from django.core.cache import cache
+from django.core.exceptions import ValidationError
+import re
+
+def check_spam(content):
+    spam_patterns = [
+        r'https?://',
+        r'www\.',
+        r'buy',
+        r'sale',
+        r'discount'
+    ]
+    return any(re.search(pattern, content.lower()) for pattern in spam_patterns)
+
 @login_required
+@rate_limit('comment', limit=5, period=60)  # 1分間に5コメントまで
 def reply_comment(request, comment_id):
     if request.method == 'POST':
         parent_comment = get_object_or_404(Comment, id=comment_id)
         content = request.POST.get('content')
+        
+        if check_spam(content):
+            raise ValidationError('スパムと判定されました')
+            
+        # 同じ内容の投稿を制限
+        cache_key = f'comment_{request.user.id}_{hashlib.md5(content.encode()).hexdigest()}'
+        if cache.get(cache_key):
+            raise ValidationError('同じ内容を連続で投稿することはできません')
+        cache.set(cache_key, True, 300)  # 5分間同じ内容の投稿を制限
         if content:
             # XSS対策としてHTMLエスケープ
             content = escape(content)
