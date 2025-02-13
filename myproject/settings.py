@@ -70,9 +70,7 @@ INSTALLED_APPS = [
     'gametube',
 ]
 
-# reCAPTCHA settings
-RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
-RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
+
 
 # JWT settings
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your-secret-key')

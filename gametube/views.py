@@ -79,13 +79,7 @@ def login_view(request):
         password = request.POST.get('password')
         otp_code = request.POST.get('otp_code')
         
-        # reCAPTCHA検証
-        captcha = ReCaptchaField()
-        try:
-            captcha.clean(request.POST.get('g-recaptcha-response'))
-        except ValidationError:
-            messages.error(request, 'reCAPTCHA認証に失敗しました')
-            return render(request, 'gametube/login.html')
+        
         ip_address = request.META.get('REMOTE_ADDR', '')
         attempts_key = f'login_attempts_{ip_address}_{username}'
         attempts = cache.get(attempts_key, 0)
