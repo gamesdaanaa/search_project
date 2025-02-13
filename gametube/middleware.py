@@ -48,10 +48,10 @@ class WAFMiddleware:
         
         # WAFルール
         self.rules = {
-            'sql_injection': r'(\b(union|drop)\b.*\b(from|table)\b)|(-{2})|(/\*)',
-            'xss': r'(<script|javascript:|vbscript:)',
-            'path_traversal': r'(\.\./|\.\.\\)',
-            'command_injection': r'(;\s*\w+\s*\|)',
+            'sql_injection': r'((\bunion\b.*\b(from|table)\b))|(/\*)',
+            'xss': r'(<script\b.*?>)',
+            'path_traversal': r'(\.\.\/.*\/)',
+            'command_injection': r'(;\s*\w+\s*\|.*)',
         }
 
     def __call__(self, request):
