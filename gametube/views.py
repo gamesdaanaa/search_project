@@ -156,6 +156,10 @@ def upload_video(request):
             if thumbnail:
                 validate_file_size(thumbnail)
                 validate_file_type(thumbnail)
+        except ValidationError as e:
+            messages.error(request, str(e))
+            return redirect('gametube:upload')
+            
         category = request.POST.get('category')
         age_restriction = request.POST.get('age_restriction')
 
