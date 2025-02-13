@@ -56,7 +56,6 @@ import jwt
 from django.conf import settings
 from django_otp import devices_for_user
 from django_otp.plugins.otp_totp.models import TOTPDevice
-from captcha.fields import ReCaptchaField
 from django.core.exceptions import ValidationError
 
 def generate_jwt_token(user):
