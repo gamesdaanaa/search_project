@@ -12,10 +12,10 @@ def rate_limit(key_prefix, limit=5, period=60):
         def _wrapped_view(request, *args, **kwargs):
             key = f"{key_prefix}:{request.user.id}"
             count = cache.get(key, 0)
-            
+
             if count >= limit:
                 return HttpResponseForbidden('レートリミットを超えました。しばらく待ってから再試行してください。')
-            
+
             cache.set(key, count + 1, period)
             return view_func(request, *args, **kwargs)
         return _wrapped_view
@@ -77,8 +77,8 @@ def login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         otp_code = request.POST.get('otp_code')
-        
-        
+
+
         ip_address = request.META.get('REMOTE_ADDR', '')
         attempts_key = f'login_attempts_{ip_address}_{username}'
         attempts = cache.get(attempts_key, 0)
@@ -116,9 +116,9 @@ def register_view(request):
         return redirect('gametube:home')
     return render(request, 'gametube/register.html')
 
-import magic
 import hashlib
 from django.core.exceptions import ValidationError
+import mimetypes
 
 def validate_file_size(file):
     max_size = 500 * 1024 * 1024  # 500MB
@@ -126,18 +126,20 @@ def validate_file_size(file):
         raise ValidationError('ファイルサイズは500MB以下にしてください。')
 
 def validate_file_type(file):
-    mime = magic.Magic()
-    file_type = mime.from_buffer(file.read(1024))
-    file.seek(0)
-    
     allowed_types = {
         'video': ['video/mp4', 'video/webm'],
         'image': ['image/jpeg', 'image/png']
     }
-    
-    if 'video' in file_type.lower() and file.content_type not in allowed_types['video']:
+
+    content_type = file.content_type
+    file_ext = mimetypes.guess_extension(content_type)
+
+    if not file_ext:
+        raise ValidationError('ファイル形式を判別できません。')
+
+    if content_type.startswith('video/') and content_type not in allowed_types['video']:
         raise ValidationError('無効な動画形式です。')
-    elif 'image' in file_type.lower() and file.content_type not in allowed_types['image']:
+    elif content_type.startswith('image/') and content_type not in allowed_types['image']:
         raise ValidationError('無効な画像形式です。')
 
 @login_required
@@ -147,7 +149,7 @@ def upload_video(request):
         description = request.POST.get('description')
         video_file = request.FILES.get('video')
         thumbnail = request.FILES.get('thumbnail')
-        
+
         try:
             if video_file:
                 validate_file_size(video_file)
@@ -158,7 +160,7 @@ def upload_video(request):
         except ValidationError as e:
             messages.error(request, str(e))
             return redirect('gametube:upload')
-            
+
         category = request.POST.get('category')
         age_restriction = request.POST.get('age_restriction')
 
@@ -317,10 +319,10 @@ def reply_comment(request, comment_id):
     if request.method == 'POST':
         parent_comment = get_object_or_404(Comment, id=comment_id)
         content = request.POST.get('content')
-        
+
         if check_spam(content):
             raise ValidationError('スパムと判定されました')
-            
+
         # 同じ内容の投稿を制限
         cache_key = f'comment_{request.user.id}_{hashlib.md5(content.encode()).hexdigest()}'
         if cache.get(cache_key):
